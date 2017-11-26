@@ -7,19 +7,19 @@
   </el-carousel>
 
   <el-row>
-  <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-    <el-card :body-style="{ padding: '0px' }">
-      <img src="http://element-cn.eleme.io/2.0/static/hamburger.50e4091.png" class="image">
-      <div style="padding: 14px;">
-        <span>好吃的汉堡</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">操作按钮</el-button>
+    <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+      <el-card :body-style="{ padding: '0px' }">
+        <img src="http://c.hiphotos.baidu.com/image/pic/item/a044ad345982b2b7e2ee380e38adcbef77099b82.jpg" class="image">
+        <div style="padding: 14px;">
+          <span>精品课程</span>
+          <div class="bottom clearfix">
+            <time class="time">{{ currentDate }}</time>
+            <el-button type="text" class="button">操作按钮</el-button>
+          </div>
         </div>
-      </div>
-    </el-card>
-  </el-col>
-</el-row>
+      </el-card>
+    </el-col>
+  </el-row>
 </div>
 </template>
 

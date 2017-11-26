@@ -1,32 +1,37 @@
 <template>
-  <el-container style="min-height: 600px; height: 100vh">
+  <div style="min-height: 100%; display: flex; flex-direction: column;">
+
+    <div style="position: fixed; z-index: 1000; width: 100%; height: 60px; padding: 0; background: white;">
+      <div style="height: 60px; padding: 0"><TopBar/></div>
+      <!-- 我是分割线 -->
+      <div style="height: 1px; background: #e6e6e6"/>
+    </div>
+
+    <div style="width: 100%; height: 60px; padding: 0"></div>
     
-    <el-header height="60px" style="padding: 0"><Header/></el-header>
-    
-    <div style="height: 1px; background: #e6e6e6"/>
-    
-    <el-row type="flex" justify="center" style="display: flex; flex: 1;">
-      <el-main style="max-width: 1440px;"><Home/></el-main>
+    <el-row type="flex" justify="center" style="flex: 1;">
+      <div style="flex:1; max-width: 1440px; margin: 20px;"><Home/></div>
     </el-row>
     
+    <!-- 我是分割线 -->
     <div style="height: 1px; background: #e6e6e6"/>
 
-    <el-footer style="flex: 0"><Footer/></el-footer>
+    <div style="height:60px; padding: 0"><BottomBar/></div>
   
-  </el-container>
+  </div>
 </template>
 
 <script>
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import TopBar from '@/components/TopBar'
+import BottomBar from '@/components/BottomBar'
 import Home from '@/components/Home'
 
 export default {
   name: 'Framework',
   components: {
-    Header,
+    TopBar,
     Home,
-    Footer
+    BottomBar
   },
   data () {
     return {

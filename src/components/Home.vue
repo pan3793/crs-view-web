@@ -9,7 +9,7 @@
   <el-row>
     <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
       <el-card :body-style="{ padding: '0px' }">
-        <img src="http://c.hiphotos.baidu.com/image/pic/item/a044ad345982b2b7e2ee380e38adcbef77099b82.jpg" class="image">
+        <img src="/res/1.jpg" class="image">
         <div style="padding: 14px;">
           <span>精品课程</span>
           <div class="bottom clearfix">

@@ -11,9 +11,15 @@ export default {
 </script>
 
 <style>
-html,
-body {
+* {
   margin: 0;
+  padding: 0;
+}
+
+body {
+  min-width: 1024px;
+  min-height: 600px;
+  height: 100vh;
 }
 #app {
   /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */

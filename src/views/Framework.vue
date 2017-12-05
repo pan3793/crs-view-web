@@ -1,14 +1,12 @@
 <template>
   <div style="min-height: 100%; display: flex; flex-direction: column;">
 
-    <div style="position: fixed; z-index: 1000; width: 100%; height: 60px; padding: 0; background: white;">
+    <div style="z-index: 1000; width: 100%; height: 60px; padding: 0; background: white;">
       <div style="height: 60px; padding: 0"><TopBar/></div>
       <!-- 我是分割线 -->
       <div style="height: 1px; background: #e6e6e6"/>
     </div>
 
-    <div style="width: 100%; height: 60px; padding: 0"></div>
-    
     <el-row type="flex" justify="center" style="flex: 1;">
       <div style="flex:1; max-width: 1440px; margin: 20px;"><Home/></div>
     </el-row>

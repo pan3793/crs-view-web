@@ -5,7 +5,9 @@ import router from './router'
 // axios.defaults.baseURL = 'http://192.168.21.30:3000'
 // axios.defaults.baseURL = 'http://api.juxiangfen.com'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.transformRequest = [function (data) { return qs.stringify(data) }]
+axios.defaults.transformRequest = [function (data) {
+  return qs.stringify(data)
+}]
 
 axios.interceptors.request.use(
   config => {

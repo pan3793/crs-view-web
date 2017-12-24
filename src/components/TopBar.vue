@@ -1,22 +1,22 @@
 <template>
   <div>
     <el-row type="flex" align="middle" justify="space-around">
-      
+
       <el-col :span="4" style="font-size: 24px">
-          <i class="el-icon-edit"/>课程资源系统
+        <i class="el-icon-edit"/>课程资源系统
       </el-col>
-      
+
       <el-col :span="11">
         <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" backgroud-color="blueviolet">
-          
+
           <template v-for="item in menu">
-  
-            <el-submenu 
+
+            <el-submenu
               v-if="item.children"
               :key="item.index"
               :index="item.url">
               <template slot="title">{{item.title}}</template>
-              <el-menu-item 
+              <el-menu-item
                 v-for="item in item.children"
                 :key="item.index"
                 :index="item.url">
@@ -24,7 +24,7 @@
               </el-menu-item>
             </el-submenu>
 
-            <el-menu-item 
+            <el-menu-item
               v-else
               :key="item.index"
               :index="item.url">

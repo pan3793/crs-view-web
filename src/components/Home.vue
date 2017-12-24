@@ -1,36 +1,36 @@
 <template>
-<div>
-  <el-carousel :interval="4000" type="card" height="360px">
-    <el-carousel-item v-for="item in 6" :key="item">
-      <h3>{{ item }}</h3>
-    </el-carousel-item>
-  </el-carousel>
+  <div>
+    <el-carousel :interval="4000" type="card" height="360px">
+      <el-carousel-item v-for="item in 6" :key="item">
+        <h3>{{ item }}</h3>
+      </el-carousel-item>
+    </el-carousel>
 
-  <el-row>
-    <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-      <el-card :body-style="{ padding: '0px' }">
-        <img src="/res/1.jpg" class="image">
-        <div style="padding: 14px;">
-          <span>精品课程</span>
-          <div class="bottom clearfix">
-            <time class="time">{{ currentDate }}</time>
-            <el-button type="text" class="button">操作按钮</el-button>
+    <el-row>
+      <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+        <el-card :body-style="{ padding: '0px' }">
+          <img src="/res/1.jpg" class="image">
+          <div style="padding: 14px;">
+            <span>精品课程</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button type="text" class="button">操作按钮</el-button>
+            </div>
           </div>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
-</div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      currentDate: new Date()
+  export default {
+    data () {
+      return {
+        currentDate: new Date()
+      }
     }
   }
-}
 </script>
 
 <style>
@@ -41,21 +41,20 @@ export default {
     line-height: 200px;
     margin: 0;
   }
-  
+
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;
   }
-  
+
   .el-carousel__item:nth-child(2n+1) {
     background-color: #d3dce6;
   }
-
 
   .time {
     font-size: 13px;
     color: #999;
   }
-  
+
   .bottom {
     margin-top: 13px;
     line-height: 12px;
@@ -73,11 +72,11 @@ export default {
 
   .clearfix:before,
   .clearfix:after {
-      display: table;
-      content: "";
+    display: table;
+    content: "";
   }
-  
+
   .clearfix:after {
-      clear: both
+    clear: both
   }
 </style>

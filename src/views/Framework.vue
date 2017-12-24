@@ -11,7 +11,7 @@
 
     <el-row type="flex" justify="center" style="flex: 1;">
       <div style="flex:1; max-width: 1440px; margin: 20px;">
-        <Home/>
+        <router-view/>
       </div>
     </el-row>
 
@@ -28,19 +28,12 @@
 <script>
   import TopBar from '@/components/TopBar'
   import BottomBar from '@/components/BottomBar'
-  import Home from '@/components/Home'
 
   export default {
     name: 'Framework',
     components: {
       TopBar,
-      Home,
       BottomBar
-    },
-    data () {
-      return {
-        msg: 'Welcome to Your Vue.js App'
-      }
     }
   }
 </script>

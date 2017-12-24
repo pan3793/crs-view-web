@@ -3,31 +3,36 @@
     <el-row type="flex" align="middle" justify="space-around">
 
       <el-col :span="4" style="font-size: 24px">
-        <i class="el-icon-edit"/>课程资源系统
+        <i class="el-icon-edit"/><span>课程资源系统</span>
       </el-col>
 
       <el-col :span="11">
-        <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" backgroud-color="blueviolet">
+        <el-menu 
+          :router="true"
+          :default-active="menuActive"
+          mode="horizontal" 
+          @select="handleSelect"
+          backgroud-color="blueviolet">
 
-          <template v-for="item in menu">
+          <template v-for="item in menuList">
 
             <el-submenu
               v-if="item.children"
-              :key="item.index"
-              :index="item.url">
+              :key="item.path"
+              :index="item.path">
               <template slot="title">{{item.title}}</template>
               <el-menu-item
                 v-for="item in item.children"
-                :key="item.index"
-                :index="item.url">
+                :key="item.path"
+                :index="item.path">
                 {{item.title}}
               </el-menu-item>
             </el-submenu>
 
             <el-menu-item
               v-else
-              :key="item.index"
-              :index="item.url">
+              :key="item.path"
+              :index="item.path">
               {{item.title}}
             </el-menu-item>
 
@@ -55,51 +60,13 @@
   export default {
     data () {
       return {
-        activeIndex: '1',
-        input: '',
-        menu: [
-          {
-            index: '1',
-            title: '精品课程',
-            url: '/1'
-          },
-          {
-            index: '2',
-            title: '分类',
-            children: [
-              {
-                index: '2-1',
-                title: '计算机',
-                url: '/2-1'
-              },
-              {
-                index: '2-2',
-                title: '经济学',
-                url: '/2-2'
-              }
-            ]
-          },
-          {
-            index: '3',
-            title: '作业',
-            url: '/3'
-          },
-          {
-            index: '4',
-            title: '在线考试',
-            url: '/4'
-          },
-          {
-            index: '5',
-            title: '交流论坛',
-            url: '/5'
-          }
-        ]
+        menuActive: this.$route.path,
+        menuList: this.$store.state.menuList,
+        input: ''
       }
     },
     methods: {
       handleSelect (key, keyPath) {
-        console.log(key, keyPath)
       }
     }
   }

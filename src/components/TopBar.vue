@@ -7,10 +7,10 @@
       </el-col>
 
       <el-col :span="11">
-        <el-menu 
+        <el-menu
           :router="true"
           :default-active="menuActive"
-          mode="horizontal" 
+          mode="horizontal"
           @select="handleSelect"
           backgroud-color="blueviolet">
 
@@ -22,10 +22,10 @@
               :index="item.path">
               <template slot="title">{{item.title}}</template>
               <el-menu-item
-                v-for="item in item.children"
-                :key="item.path"
-                :index="item.path">
-                {{item.title}}
+                v-for="subItem in item.children"
+                :key="subItem.path"
+                :index="subItem.path">
+                {{subItem.title}}
               </el-menu-item>
             </el-submenu>
 

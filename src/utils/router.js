@@ -6,6 +6,7 @@ import Classwork from '@/components/Classwork'
 import CourseList from '@/components/CourseList'
 import Exam from '@/components/Exam'
 import Forum from '@/components/Forum'
+import Course from '@/components/Course'
 
 Vue.use(Router)
 
@@ -25,7 +26,7 @@ export default new Router({
           component: Classwork
         },
         {
-          path: 'courseList/:condition',
+          path: 'courseList/:condition?',
           component: CourseList
         },
         {
@@ -35,6 +36,10 @@ export default new Router({
         {
           path: 'forum',
           component: Forum
+        },
+        {
+          path: 'course/:id',
+          component: Course
         }
       ]
     }

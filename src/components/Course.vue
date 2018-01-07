@@ -1,19 +1,22 @@
 <template>
   <div style="text-align: start;">
     <el-card>
+
+      <div slot="header" style="display: flex; align-items: baseline">
+        <h1>{{course.name}}</h1>
+        <span style="padding-left: 20px">{{course.teacher}}</span>
+      </div>
+
       <div style="display: flex">
         <div>
-
-          <h1>{{title}}</h1>
-
-          <div style="height: 1px; background: #e6e6e6; margin: 10px 0"></div>
-
           <div>
-            {{introduction}}
+            {{course.description}}
           </div>
         </div>
 
-        <img src="../assets/logo.png" width="200" height="200"/>
+        <div style="padding-left: 20px">
+          <img src="../assets/logo.png" style="max-width: 400px"/>
+        </div>
 
       </div>
     </el-card>
@@ -79,12 +82,12 @@
 </template>
 
 <script>
+  import data from '@/utils/data'
+
   export default {
     data () {
       return {
-        title: '货币金融学',
-        teacher: '张教授',
-        introduction: '《货币金融学》是一本创新型金融学教材，在体系结构设计、知识面的涵盖方面整合了传统货币银行学与现代金融学的内容，反映金融理论与金融实践发展，构建“宽口径”的金融学知识体系，体现金融学科与时俱进的时代特征。 本教材分为四篇，第一篇为金融学基础，诠释货币、信用、利息、外汇、金融的基本原理；第二篇为金融机构与市场，介绍存款性金融机构、非存款性金融机构的主要业务活动，揭示货币市场与资本市场的运行规律；第三篇为国际金融与全球化，分析国际间货币与资本运动的特殊性及相关经营管理体系，以及全球化的发展趋势；第四篇为金融与经济发展，研究货币供应与需求、货币均衡、货币政策与宏观调控、金融风险与金融监管、金融与经济发展等问题。'
+        course: data.course
       }
     }
   }

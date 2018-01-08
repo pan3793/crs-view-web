@@ -6,14 +6,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    menu: data.menu
+    menuList: data.menuList
   },
   mutations: {
-    setSystemId (state, val) {
-      state.systemId = val
-    },
-    setUserSystemId (state, val) {
-      state.userSystemId = val
+    setMenuList (state, val) {
+      state.menuList = val
     }
   }
 })

@@ -1,33 +1,38 @@
 <template>
   <div>
     <el-row type="flex" align="middle" justify="space-around">
-      
+
       <el-col :span="4" style="font-size: 24px">
-          <i class="el-icon-edit"/>课程资源系统
+        <i class="el-icon-edit"/><span>课程资源系统</span>
       </el-col>
-      
+
       <el-col :span="11">
-        <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" backgroud-color="blueviolet">
-          
-          <template v-for="item in menu">
-  
-            <el-submenu 
+        <el-menu
+          :router="true"
+          :default-active="menuActive"
+          mode="horizontal"
+          @select="handleSelect"
+          backgroud-color="blueviolet">
+
+          <template v-for="item in menuList">
+
+            <el-submenu
               v-if="item.children"
-              :key="item.index"
-              :index="item.url">
+              :key="item.path"
+              :index="item.path">
               <template slot="title">{{item.title}}</template>
-              <el-menu-item 
-                v-for="item in item.children"
-                :key="item.index"
-                :index="item.url">
-                {{item.title}}
+              <el-menu-item
+                v-for="subItem in item.children"
+                :key="subItem.path"
+                :index="subItem.path">
+                {{subItem.title}}
               </el-menu-item>
             </el-submenu>
 
-            <el-menu-item 
+            <el-menu-item
               v-else
-              :key="item.index"
-              :index="item.url">
+              :key="item.path"
+              :index="item.path">
               {{item.title}}
             </el-menu-item>
 
@@ -52,20 +57,16 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   export default {
     data () {
       return {
-        activeIndex: '1',
+        menuActive: this.$route.path,
+        menuList: this.$store.state.menuList,
         input: ''
       }
     },
-    computed: mapState([
-      'menu'
-    ]),
     methods: {
       handleSelect (key, keyPath) {
-        console.log(key, keyPath)
       }
     }
   }

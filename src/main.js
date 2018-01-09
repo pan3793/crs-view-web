@@ -11,9 +11,13 @@ import App from './App'
 import router from './utils/router'
 import store from './utils/store'
 import api from './utils/api'
+import _ from 'lodash'
+import preset from './utils/data'
 
 Vue.config.productionTip = false
 Vue.prototype.$api = api
+Vue.prototype._ = _
+Vue.prototype.preset = preset
 
 Vue.use(ElementUI)
 Vue.use(MavonEditor)

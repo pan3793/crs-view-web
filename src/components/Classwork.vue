@@ -1,8 +1,13 @@
 <template>
   <div>
     <div>Classwork</div>
-    <mavon-editor :value="value"
-      :subfield="false" :editable="true" default_open="preview" :toolbarsFlag="false"></mavon-editor>
+    <mavon-editor
+      :value="value"
+      :subfield="false"
+      :editable="true"
+      default_open="preview"
+      :toolbarsFlag="false">
+    </mavon-editor>
   </div>
 </template>
 

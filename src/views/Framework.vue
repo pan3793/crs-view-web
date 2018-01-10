@@ -6,17 +6,17 @@
         <TopBar/>
       </div>
       <!-- 我是分割线 -->
-      <div style="height: 1px; background: #e6e6e6"/>
+      <div style="height: 1px; background: #e6e6e6"></div>
     </div>
 
     <el-row type="flex" justify="center" style="flex: 1;">
-      <div style="flex:1; max-width: 1440px; margin: 20px;">
+      <div style="width: 1240px; padding: 20px;">
         <router-view/>
       </div>
     </el-row>
 
     <!-- 我是分割线 -->
-    <div style="height: 1px; background: #e6e6e6"/>
+    <div style="height: 1px; background: #e6e6e6"></div>
 
     <div style="height:60px; padding: 0">
       <BottomBar/>

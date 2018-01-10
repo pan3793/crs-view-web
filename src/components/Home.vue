@@ -7,19 +7,30 @@
     </el-carousel>
 
     <el-row>
-      <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-        <el-card :body-style="{ padding: '0px' }">
-          <img src="http://101.132.159.21/res/1.jpg" class="image">
-          <div style="padding: 14px;">
-            <span>精品课程</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">操作按钮</el-button>
-            </div>
+      <el-col :span="12" style="padding: 10px" v-for="i in 7">
+        <el-card>
+
+          <div slot="header" style="text-align: start">
+            计算机
           </div>
+
+          <el-row>
+            <el-col :span="12" v-for="i in 5" style="padding: 15px" >
+              <el-card :body-style="{ padding: '0px' }" >
+                <img src="http://101.132.159.21/res/1.jpg" class="image">
+                <div>
+                    <el-button type="text" >精品课程</el-button>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
         </el-card>
       </el-col>
+
     </el-row>
+
+
   </div>
 </template>
 
@@ -34,6 +45,7 @@
 </script>
 
 <style>
+  /*跑马灯*/
   .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;
@@ -55,28 +67,19 @@
     color: #999;
   }
 
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
+  /*.bottom {*/
+  /*margin-top: 13px;*/
+  /*line-height: 12px;*/
+  /*}*/
 
-  .button {
-    padding: 0;
-    float: right;
-  }
+  /*.button {*/
+  /*padding: 0;*/
+  /*float: right;*/
+  /*}*/
 
   .image {
     width: 100%;
     display: block;
   }
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-
-  .clearfix:after {
-    clear: both
-  }
 </style>

@@ -17,7 +17,7 @@
   }
 
   body {
-    min-width: 1024px;
+    min-width: 1280px;
     min-height: 600px;
     height: 100vh;
   }

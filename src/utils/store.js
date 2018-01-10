@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    menuList: data.menuList
+    menuList: data.menuList,
+    searchBarVisibility: true
   },
   mutations: {
     setMenuList (state, val) {

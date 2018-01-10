@@ -41,9 +41,9 @@
         </el-menu>
       </el-col>
 
-      <el-col :span="5">
+      <el-col :span="5" :style="{visibility: searchBarVisibility ? 'visible': 'hidden'}">
         <el-input v-model="input" placeholder="请输入内容">
-          <el-button slot="append" type="primary" icon="el-icon-search"></el-button>
+          <el-button slot="append" type="primary" icon="el-icon-search"/>
         </el-input>
       </el-col>
 
@@ -62,6 +62,7 @@
       return {
         menuActive: this.$route.path,
         menuList: this.$store.state.menuList,
+        searchBarVisibility: this.$store.state.searchBarVisibility,
         input: ''
       }
     },

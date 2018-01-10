@@ -22,10 +22,10 @@
     </el-card>
 
     <div v-for="card in course.cards">
-      <el-collapse style="margin: 10px 0">
+      <el-collapse value="1" style="margin: 10px 0">
 
         <el-card body-style="padding: 0 15px">
-          <el-collapse-item>
+          <el-collapse-item name="1">
 
             <template slot="title">
               <div style="margin: 0 5px">
@@ -41,8 +41,27 @@
                           :toolbarsFlag="false"
                           style="margin: 5px">
             </mavon-editor>
+            <div style="display: flex; flex-wrap: wrap; ">
+              <div v-for="i in 5" style="padding: 25px; max-width: 300px; text-align: center">
+                <div>
+                  <video preload="metadata" src="http://101.132.159.21:1999/testvideo.mp4" width="300"></video>
+                </div>
+                <div>我是标题</div>
+                <div style="padding-top: 10px">
+                  <el-button type="primary" icon="el-icon-view">观看视频</el-button>
+                </div>
+              </div>
+            </div>
 
-            <video controls src="http://101.132.159.21:1999/testvideo.mp4" width="300"></video>
+            <div style="display: flex; flex-wrap: wrap; ">
+              <div v-for="i in 5" style="padding: 25px; max-width: 300px; text-align: center">
+                <div><img src="../assets/image/icon/word_icon.png" alt=""/></div>
+                <div>我是标题</div>
+                <div style="padding-top: 10px">
+                  <el-button type="primary" icon="el-icon-download">下载</el-button>
+                </div>
+              </div>
+            </div>
 
           </el-collapse-item>
         </el-card>

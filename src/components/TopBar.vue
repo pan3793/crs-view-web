@@ -43,7 +43,7 @@
 
       <el-col :span="5" :style="{visibility: searchBarVisibility ? 'visible': 'hidden'}">
         <el-input v-model="input" placeholder="请输入内容">
-          <el-button slot="append" type="primary" icon="el-icon-search"/>
+          <el-button slot="append" type="primary" icon="el-icon-search" @click="goCourseList"/>
         </el-input>
       </el-col>
 
@@ -68,6 +68,9 @@
     },
     methods: {
       handleSelect (key, keyPath) {
+      },
+      goCourseList () {
+        this.$router.push('/courseList')
       }
     }
   }

@@ -15,11 +15,11 @@
           </div>
 
           <el-row>
-            <el-col :span="12" v-for="i in 5" style="padding: 15px" >
-              <el-card :body-style="{ padding: '0px' }" >
+            <el-col :span="12" v-for="i in 5" style="padding: 15px">
+              <el-card :body-style="{ padding: '0px' }">
                 <img src="http://101.132.159.21/res/1.jpg" class="image">
                 <div>
-                    <el-button type="text" >精品课程</el-button>
+                  <el-button type="text" @click="goCourse()">精品课程</el-button>
                 </div>
               </el-card>
             </el-col>
@@ -39,6 +39,11 @@
     data () {
       return {
         currentDate: new Date()
+      }
+    },
+    methods: {
+      goCourse () {
+        this.$router.push('/course/1')
       }
     }
   }

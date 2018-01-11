@@ -42,9 +42,9 @@
                           style="margin: 5px">
             </mavon-editor>
             <div style="display: flex; flex-wrap: wrap; ">
-              <div v-for="i in 5" style="padding: 25px; max-width: 300px; text-align: center">
+              <div v-for="i in 5" style="padding: 25px; max-width: 350px; text-align: center">
                 <div>
-                  <video preload="metadata" src="http://101.132.159.21:1999/testvideo.mp4" width="300"></video>
+                  <video preload="metadata" src="http://101.132.159.21:1999/testvideo.mp4" width="350"></video>
                 </div>
                 <div>我是标题</div>
                 <div style="padding-top: 10px">
@@ -54,8 +54,8 @@
             </div>
 
             <div style="display: flex; flex-wrap: wrap; ">
-              <div v-for="i in 5" style="padding: 25px; max-width: 300px; text-align: center">
-                <div><img src="../assets/image/icon/word_icon.png" alt=""/></div>
+              <div v-for="i in 15" style="padding: 25px; max-width: 300px; text-align: center">
+                <div><img src="../assets/image/icon/word.png" width="96" height="96" alt=""/></div>
                 <div>我是标题</div>
                 <div style="padding-top: 10px">
                   <el-button type="primary" icon="el-icon-download">下载</el-button>

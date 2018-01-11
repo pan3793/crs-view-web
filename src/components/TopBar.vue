@@ -14,7 +14,7 @@
           @select="handleSelect"
           backgroud-color="blueviolet">
 
-          <template v-for="item in menuList">
+          <template v-for="item in menus">
 
             <el-submenu
               v-if="item.children"
@@ -61,7 +61,7 @@
     data () {
       return {
         menuActive: this.$route.path,
-        menuList: this.$store.state.menuList,
+        menus: this.$store.state.menus,
         searchBarVisibility: this.$store.state.searchBarVisibility,
         input: ''
       }

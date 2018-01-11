@@ -41,22 +41,35 @@
                           :toolbarsFlag="false"
                           style="margin: 5px">
             </mavon-editor>
-            <div style="display: flex; flex-wrap: wrap; ">
-              <div v-for="i in 5" style="padding: 25px; max-width: 350px; text-align: center">
+            <div v-if="card.attachments && card.attachments.filter(it => it.type ==='video')"
+                 style="display: flex; flex-wrap: wrap;">
+              <div v-for="attachment in card.attachments.filter(it => it.type ==='video')"
+                   style="padding: 25px; max-width: 350px; text-align: center">
                 <div>
-                  <video preload="metadata" src="http://101.132.159.21:1999/testvideo.mp4" width="350"></video>
+                  <video preload="metadata" :src="attachment.url" width="350"></video>
                 </div>
-                <div>我是标题</div>
+                <div :title="attachment.name">{{truncate(attachment.name, 29)}}</div>
                 <div style="padding-top: 10px">
                   <el-button type="primary" icon="el-icon-view">观看视频</el-button>
                 </div>
               </div>
             </div>
 
-            <div style="display: flex; flex-wrap: wrap; ">
-              <div v-for="i in 15" style="padding: 25px; max-width: 300px; text-align: center">
-                <div><img src="../assets/image/icon/word.png" width="96" height="96" alt=""/></div>
-                <div>我是标题</div>
+            <div v-if="card.attachments && card.attachments.filter(it => it.type !== 'video')"
+                 style="display: flex; flex-wrap: wrap; ">
+              <div v-for="attachment in card.attachments.filter(it => it.type !== 'video')"
+                   style="padding: 25px; max-width: 96px; text-align: center">
+                <div>
+                  <img v-if="attachment.type === 'word'" src="../assets/image/icon/word.png" width="96" height="96"/>
+                  <img v-else-if="attachment.type === 'excel'" src="../assets/image/icon/excel.png" width="96"
+                       height="96"/>
+                  <img v-else-if="attachment.type === 'ppt'" src="../assets/image/icon/ppt.png" width="96" height="96"/>
+                  <img v-else-if="attachment.type === 'pdf'" src="../assets/image/icon/pdf.png" width="96" height="96"/>
+                  <img v-else-if="attachment.type === 'zip'" src="../assets/image/icon/zip.png" width="96" height="96"/>
+                  <img v-else="attachment.type === 'other'" src="../assets/image/icon/other.png" width="96"
+                       height="96"/>
+                </div>
+                <div :title="attachment.name">{{truncate(attachment.name, 9)}}</div>
                 <div style="padding-top: 10px">
                   <el-button type="primary" icon="el-icon-download">下载</el-button>
                 </div>
@@ -83,12 +96,10 @@
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
+      },
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
       }
     }
   }
 </script>
-
-<style>
-
-</style>
-

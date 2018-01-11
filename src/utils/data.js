@@ -1,5 +1,5 @@
 export default {
-  menuList: [
+  menus: [
     {
       title: '精品课程',
       path: '/home'
@@ -31,7 +31,24 @@ export default {
       path: '/forum'
     }
   ],
+  categories: [
+    {
+      id: 1,
+      name: '计算机'
+    },
+    {
+      id: 2,
+      name: '经济学'
+    }
+  ],
+  courseCards: {
+    id: 1,
+    name: '货币金融学',
+    teacher: '张教授',
+    imageUrl: 'http://101.132.159.21/res/1.jpg'
+  },
   course: {
+    id: 1,
     name: '货币金融学',
     teacher: '张教授',
     imageUrl: 'http://101.132.159.21/res/1.jpg',
@@ -58,16 +75,52 @@ export default {
       {
         title: '课件',
         content: '',
-        attachments: []
+        attachments: [
+          {
+            name: 'word',
+            type: 'word',
+            url: ''
+          },
+          {
+            name: '我是名字超长的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的excel',
+            type: 'excel',
+            url: ''
+          },
+          {
+            name: 'ppt',
+            type: 'ppt',
+            url: ''
+          },
+          {
+            name: 'pdf',
+            type: 'pdf',
+            url: ''
+          },
+          {
+            name: 'zip',
+            type: 'zip',
+            url: ''
+          },
+          {
+            name: 'file',
+            type: 'other',
+            url: ''
+          }
+        ]
       },
       {
         title: '视频',
         content: '',
         attachments: [
           {
-            name: '',
-            type: '',
-            url: ''
+            name: '我是视频',
+            type: 'video',
+            url: 'http://101.132.159.21:1999/testvideo.mp4'
+          },
+          {
+            name: '我是名字超长的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的的视频',
+            type: 'video',
+            url: 'http://101.132.159.21:1999/testvideo.mp4'
           }
         ]
       },

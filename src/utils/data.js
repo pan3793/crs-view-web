@@ -129,5 +129,37 @@ export default {
         content: ''
       }
     ]
-  }
+  },
+  adminMenus: [
+    {
+      title: '权限管理',
+      path: '/home',
+      children: [
+        {
+          title: '计算机',
+          path: '/courseList/cs'
+        },
+        {
+          title: '经济学',
+          path: '/courseList/economic'
+        }
+      ]
+    },
+    {
+      title: '课程管理',
+      path: '/course'
+    },
+    {
+      title: '作业管理',
+      path: '/classwork'
+    },
+    {
+      title: '考试管理',
+      path: '/exam'
+    },
+    {
+      title: '论坛管理',
+      path: '/forum'
+    }
+  ]
 }

@@ -1,18 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Framework from '@/views/Framework'
-import Home from '@/components/Home'
-import Classwork from '@/components/Classwork'
-import CourseList from '@/components/CourseList'
-import Exam from '@/components/Exam'
-import Forum from '@/components/Forum'
-import Course from '@/components/Course'
+import Framework from '@/frameworks/Framework'
+import AdminFramework from '@/frameworks/AdminFramework'
+import Home from '@/fragments/Home'
+import Classwork from '@/fragments/Classwork'
+import CourseList from '@/fragments/CourseList'
+import Exam from '@/fragments/Exam'
+import Forum from '@/fragments/Forum'
+import Course from '@/fragments/Course'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', redirect: '/home' },
+    {path: '/', redirect: '/home'},
     {
       path: '/',
       component: Framework,
@@ -40,6 +41,27 @@ export default new Router({
         {
           path: 'course/:id',
           component: Course
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      component: AdminFramework,
+      children: [
+        {
+          path: 'auth'
+        },
+        {
+          path: 'course'
+        },
+        {
+          path: 'classwork'
+        },
+        {
+          path: 'exam'
+        },
+        {
+          path: 'forum'
         }
       ]
     }

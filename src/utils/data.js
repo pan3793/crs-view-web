@@ -10,11 +10,11 @@ export default {
       children: [
         {
           title: '计算机',
-          path: '/courseList/cs'
+          path: '/courseList?category=cs'
         },
         {
           title: '经济学',
-          path: '/courseList/economic'
+          path: '/courseList?category=economic'
         }
       ]
     },
@@ -133,33 +133,45 @@ export default {
   adminMenus: [
     {
       title: '权限管理',
-      path: '/home',
+      path: '/admin/auth',
       children: [
         {
-          title: '计算机',
-          path: '/courseList/cs'
+          title: '用户管理',
+          path: '/admin/auth/user'
         },
         {
-          title: '经济学',
-          path: '/courseList/economic'
+          title: '角色管理',
+          path: '/admin/auth/role'
+        },
+        {
+          title: '访问控制列表',
+          path: '/admin/auth/acl'
         }
       ]
     },
     {
+      title: '分类管理',
+      path: '/admin/category'
+    },
+    {
       title: '课程管理',
-      path: '/course'
+      path: '/admin/course'
+    },
+    {
+      title: '题库管理',
+      path: '/admin/question'
     },
     {
       title: '作业管理',
-      path: '/classwork'
+      path: '/admin/classwork'
     },
     {
       title: '考试管理',
-      path: '/exam'
+      path: '/admin/exam'
     },
     {
       title: '论坛管理',
-      path: '/forum'
+      path: '/admin/forum'
     }
   ]
 }

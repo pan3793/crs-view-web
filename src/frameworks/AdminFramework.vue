@@ -1,17 +1,19 @@
 <template>
   <div style="min-height: 100%; display: flex; flex-direction: column;">
 
-    <div style="z-index: 1000; width: 100%; height: 60px; padding: 0; background: white;">
-      <div style="height: 60px; padding: 0; background: lightslategrey">
-        TopBar
+    <div style="display: flex; align-items: center; height: 60px; padding: 0; background: #263238">
+      <div style="font-size: 24px; padding-left: 20px; color: #eceff1">
+        <i class="el-icon-setting"/>
+        <span>课程资源系统管理平台</span>
       </div>
     </div>
 
-    <div style="display: flex; flex: 1; background: cornflowerblue">
+    <div style="display: flex; flex: 1;">
       <el-menu style="width: 200px; text-align: start"
-               default-active="2"
-               @open="handleOpen"
-               @close="handleClose">
+               :router="true"
+               background-color="#37474f"
+               text-color="#eceff1"
+               active-text-color="#40c4ff">
 
         <template v-for="item in adminMenus">
 
@@ -37,7 +39,10 @@
 
         </template>
       </el-menu>
-      <div style="flex: 1; background: blueviolet">
+
+
+
+      <div style="flex: 1;">
         <router-view/>
       </div>
     </div>

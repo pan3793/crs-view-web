@@ -1,10 +1,14 @@
 <template>
-    <dv>CategoryAdmin</dv>
+  <div style="padding: 30px; text-align: start">
+    <div>
+      <el-button type="primary">添加</el-button>
+    </div>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'category-admin'
+    name: 'CategoryAdmin'
   }
 </script>
 

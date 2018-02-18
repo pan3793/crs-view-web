@@ -40,9 +40,7 @@
         </template>
       </el-menu>
 
-
-
-      <div style="flex: 1;">
+      <div style="flex: 1; overflow: auto;">
         <router-view/>
       </div>
     </div>

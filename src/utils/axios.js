@@ -1,42 +1,25 @@
 import axios from 'axios'
-import qs from 'qs'
 import router from './router'
-
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.transformRequest = [function (data) {
-  return qs.stringify(data)
-}]
+import vue from '../main'
+import * as Constant from './constant'
 
 axios.interceptors.request.use(
-  config => {
+  request => {
     let token = localStorage.getItem('token')
     if (token) {
-      config.headers['CRS-TOKEN'] = `${token}`
+      request.headers['CRS-TOKEN'] = `${token}`
     }
-    return config
+    return request
   },
-  err => {
-    return Promise.reject(err)
+  error => {
+    return Promise.reject(error)
   })
 
 axios.interceptors.response.use(
   response => {
-    if (response.data.code === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('password')
-      router.replace({
-        path: 'login',
-        query: {
-          redirect: router.currentRoute.fullPath
-        }
-      })
-    }
-    return response
-  },
-  error => {
-    if (error.response) {
-      switch (error.response.data.code) {
-        case 401:
+    if (response) {
+      switch (response.status) {
+        case Constant.TOKEN_INVALID_CODE:
           localStorage.removeItem('token')
           localStorage.removeItem('password')
           router.push({
@@ -45,9 +28,17 @@ axios.interceptors.response.use(
               redirect: router.currentRoute.fullPath
             }
           })
+          break
+        case Constant.NO_PERMISSION_CODE:
+          vue.$message(response.data.message)
+          break
       }
     }
-    return Promise.reject(error.response.data)
+    return response
+  },
+  error => {
+    vue.$message.error('请求超时')
+    return Promise.reject(error)
   })
 
 export default axios

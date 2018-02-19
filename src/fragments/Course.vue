@@ -21,7 +21,7 @@
       </div>
     </el-card>
 
-    <div v-for="card in course.cards">
+    <div v-for="card in course.cards" :key="card">
       <el-collapse value="1" style="margin: 10px 0">
 
         <el-card body-style="padding: 0 15px">

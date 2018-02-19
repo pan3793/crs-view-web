@@ -19,6 +19,7 @@
         </template>
       </el-table-column>
       <el-table-column v-for="item in tableMeta.columns"
+                       :key="item.prop"
                        :prop="item.prop"
                        :label="item.label"
                        :width="item.width"
@@ -73,12 +74,6 @@
           visible: false,
           showId: false,
           labelWidth: '50px',
-          items: [
-            {prop: 'id', label: 'Id', type: 'text', show: true, disabled: true, model: 'formData.id'},
-            {prop: 'name', label: '名称', type: 'text', show: true, required: true, model: 'formData.name'},
-            {prop: 'description', label: '描述', type: 'textarea', show: true, model: 'formData.description'},
-            {prop: 'note', label: '备注', type: 'textarea', show: true, model: 'formData.note'}
-          ],
           rules: {
             name: [
               {required: true, message: '名称不能为空', trigger: 'blur'}

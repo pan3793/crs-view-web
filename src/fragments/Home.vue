@@ -7,7 +7,7 @@
     </el-carousel>
 
     <el-row>
-      <el-col :span="12" style="padding: 10px" v-for="i in 7">
+      <el-col :span="12" style="padding: 10px" v-for="i in 7" :key="i">
         <el-card>
 
           <div slot="header" style="text-align: start">
@@ -15,7 +15,7 @@
           </div>
 
           <el-row>
-            <el-col :span="12" v-for="i in 5" style="padding: 15px">
+            <el-col :span="12" v-for="i in 5" :key="i" style="padding: 15px">
               <el-card :body-style="{ padding: '0px' }">
                 <img src="http://101.132.159.21/res/1.jpg" class="image">
                 <div>

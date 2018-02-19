@@ -3,7 +3,7 @@
     <el-form :inline="true" :model="formInline" style="text-align: start">
       <el-form-item label="分类">
         <el-select v-model="formInline.region" placeholder="请选择" :clearable="true">
-          <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
+          <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="课程名">
@@ -19,7 +19,7 @@
 
 
     <el-row>
-      <el-col :span="6" v-for="i in 20" style="padding: 15px">
+      <el-col :span="6" v-for="i in 20" :key="i" style="padding: 15px">
         <el-card :body-style="{ padding: '0px' }">
           <img src="http://101.132.159.21/res/1.jpg" style="width: 100%">
           <div>

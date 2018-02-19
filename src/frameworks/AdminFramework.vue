@@ -9,6 +9,7 @@
     </div>
 
     <div style="display: flex; flex: 1;">
+      <!--动态构建二级菜单-->
       <el-menu style="width: 200px; text-align: start"
                :router="true"
                background-color="#37474f"

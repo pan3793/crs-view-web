@@ -16,5 +16,17 @@ export default {
   },
   removeCategoryById (id) {
     return axios.delete(`/crs-server/api/category/${id}`)
+  },
+  fetchCourses () {
+    return axios.get('/crs-server/api/course')
+  },
+  fetchCourseById (id) {
+    return axios.get(`/crs-server/api/course/${id}`)
+  },
+  saveCourse (param) {
+    return axios.post('/crs-server/api/course', param)
+  },
+  removeCourseById (id) {
+    return axios.delete(`/crs-server/api/course/${id}`)
   }
 }

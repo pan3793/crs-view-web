@@ -150,6 +150,10 @@ export default {
       ]
     },
     {
+      title: '教师管理',
+      path: '/admin/teacher'
+    },
+    {
       title: '分类管理',
       path: '/admin/category'
     },

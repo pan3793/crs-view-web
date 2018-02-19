@@ -11,6 +11,7 @@ import Course from '@/fragments/Course'
 import UserAdmin from '@/fragments/UserAdmin'
 import RoleAdmin from '@/fragments/RoleAdmin'
 import AclAdmin from '@/fragments/AclAdmin'
+import TeacherAdmin from '@/fragments/TeacherAdmin'
 import CategoryAdmin from '@/fragments/CategoryAdmin'
 import CourseAdmin from '@/fragments/CourseAdmin'
 import QuestionAdmin from '@/fragments/QuestionAdmin'
@@ -68,6 +69,10 @@ export default new Router({
         {
           path: 'auth/acl',
           component: AclAdmin
+        },
+        {
+          path: 'teacher',
+          component: TeacherAdmin
         },
         {
           path: 'category',

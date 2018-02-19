@@ -7,6 +7,7 @@
       </el-col>
 
       <el-col :span="11">
+        <!--动态构建二级菜单-->
         <el-menu
           :router="true"
           :default-active="menuActive"

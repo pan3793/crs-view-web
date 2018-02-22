@@ -32,13 +32,10 @@
           <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-          <el-input v-model.trim="formData.name" auto-complete="off"></el-input>
+          <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
         </el-form-item>
         <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
           <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item prop="note" label="备注" :label-width="formMeta.labelWidth">
-          <el-input type="textarea" v-model.trim="formData.note" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -61,18 +58,18 @@
           columns: [
             {prop: 'id', label: 'Id', width: 60},
             {prop: 'name', label: '名称', width: 200},
-            {prop: 'description', label: '描述', width: 300},
+            {prop: 'description', label: '描述', minWidth: 300},
             {prop: 'creator', label: '创建人', width: 100},
             {prop: 'createTime', label: '创建时间', width: 160},
             {prop: 'modifier', label: '修改人', width: 100},
-            {prop: 'modifiedTime', label: '修改时间', width: 160},
-            {prop: 'note', label: '备注', minWidth: 200}
+            {prop: 'modifiedTime', label: '修改时间', width: 160}
           ]
         },
         tableData: [],
         formMeta: {
           visible: false,
           showId: false,
+          nameDisabled: false,
           labelWidth: '50px',
           rules: {
             name: [
@@ -82,9 +79,8 @@
         },
         formData: {
           id: null,
-          name: null,
-          description: null,
-          note: null
+          name: '',
+          description: ''
         }
       }
     },
@@ -93,21 +89,21 @@
     },
     methods: {
       onClickAdd () {
-        this.formData.id = null
-        this.formData.name = null
-        this.formData.description = null
-        this.formData.note = null
-
         this.formMeta.showId = false
+        this.formMeta.nameDisabled = false
         this.formMeta.visible = true
+        // 避免首次加载对象不存在
+        if (this.$refs['form']) {
+          this.$refs['form'].resetFields()
+        }
       },
       onClickChangeRow (row) {
         this.formData.id = row.id
         this.formData.name = row.name
         this.formData.description = row.description
-        this.formData.note = row.note
 
         this.formMeta.showId = true
+        this.formMeta.nameDisabled = true
         this.formMeta.visible = true
       },
       onClickRemoveRow (row) {
@@ -133,8 +129,6 @@
       onClickSubmit () {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            console.log(this.formData)
-            console.log(valid)
             this.$api.saveCategory(this.formData).then(response => {
               switch (response.data.code) {
                 case Constant.SUCCESS_CODE:

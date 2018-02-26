@@ -31,6 +31,19 @@ export default {
   removeRoleById (id) {
     return axios.delete(`/crs-auth-server/api/role/${id}`)
   },
+  // acl
+  fetchAcls () {
+    return axios.get('/crs-auth-server/api/acl')
+  },
+  fetchAclById (id) {
+    return axios.get(`/crs-auth-server/api/acl/${id}`)
+  },
+  saveAcl (entity) {
+    return axios.post('/crs-auth-server/api/acl', entity)
+  },
+  removeAclById (id) {
+    return axios.delete(`/crs-auth-server/api/acl/${id}`)
+  },
   // teacher
   fetchTeachers () {
     return axios.get('/crs-server/api/teacher')

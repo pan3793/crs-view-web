@@ -92,6 +92,7 @@
     },
     methods: {
       onClickAdd () {
+        this.formData.id = null
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
         this.formMeta.visible = true

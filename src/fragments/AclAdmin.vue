@@ -18,12 +18,35 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column v-for="item in tableMeta.columns"
-                       :key="item.prop"
-                       :prop="item.prop"
-                       :label="item.label"
-                       :width="item.width"
-                       :min-width="item.minWidth"></el-table-column>
+
+      <el-table-column prop='id' label="Id" width="60"></el-table-column>
+      <el-table-column prop='name' label="名称" width="200"></el-table-column>
+      <el-table-column prop='url' label="URL" width="500"></el-table-column>
+      <el-table-column prop='anonymous' label="匿名访问" width="80">
+        <template slot-scope="scope">
+          <el-tag size="small" :type="scope.row.anonymous === true ? 'success' : 'danger'" disable-transitions>
+            {{ scope.row.anonymous === true ? '启用' : '禁用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop='affirmative' label="完全授权" width="80">
+        <template slot-scope="scope">
+          <el-tag size="small" :type="scope.row.affirmative === true ? 'success' : 'danger'" disable-transitions>
+            {{ scope.row.affirmative === true ? '启用' : '禁用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop='roleIds' label="授权角色" width="300">
+        <template slot-scope="scope">
+          {{ convertRoleIds2NamesString(scope.row.roleIds) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop='priority' label="优先级" width="80"></el-table-column>
+      <el-table-column prop='creator' label="创建人" width="100"></el-table-column>
+      <el-table-column prop='createTime' label="创建时间" width="160"></el-table-column>
+      <el-table-column prop='modifier' label="修改人" width="100"></el-table-column>
+      <el-table-column prop='modifiedTime' label="修改时间" width="160"></el-table-column>
+
     </el-table>
 
     <el-dialog title="访问控制列表" :visible.sync="formMeta.visible">
@@ -37,17 +60,24 @@
         <el-form-item prop="url" label="URL" :label-width="formMeta.labelWidth" required>
           <el-input v-model.trim="formData.url" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="anonymous" label="匿名" :label-width="formMeta.labelWidth" required>
-          <el-switch v-model.trim="formData.anonymous"></el-switch>
+        <el-form-item prop="anonymous" label="匿名访问" :label-width="formMeta.labelWidth" required>
+          <el-switch v-model="formData.anonymous"></el-switch>
         </el-form-item>
         <el-form-item prop="affirmative" label="完全授权" :label-width="formMeta.labelWidth" required>
-          <el-switch v-model.trim="formData.affirmative"></el-switch>
+          <el-switch v-model="formData.affirmative"></el-switch>
         </el-form-item>
         <el-form-item prop="roleIds" label="授权角色" :label-width="formMeta.labelWidth" required>
-          <el-input v-model.trim="formData.roleIds" auto-complete="off"></el-input>
+          <el-select v-model.trim="formData.roleIds" style="width: 100%" multiple>
+            <el-option
+              v-for="item in formMeta.roleIdNameList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item prop="priority" label="优先级" :label-width="formMeta.labelWidth" required>
-          <el-input v-model.trim="formData.priority" auto-complete="off"></el-input>
+          <el-input-number v-model="formData.priority"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -66,20 +96,7 @@
     data () {
       return {
         tableMeta: {
-          operation: {change: true, remove: true},
-          columns: [
-            {prop: 'id', label: 'Id', width: 60},
-            {prop: 'name', label: '名称', width: 200},
-            {prop: 'url', label: 'URL', minWidth: 500},
-            {prop: 'anonymous', label: '匿名', minWidth: 80},
-            {prop: 'affirmative', label: '完全授权', minWidth: 80},
-            {prop: 'roleIds', label: '授权角色', minWidth: 300},
-            {prop: 'priority', label: '优先级', minWidth: 80},
-            {prop: 'creator', label: '创建人', width: 100},
-            {prop: 'createTime', label: '创建时间', width: 160},
-            {prop: 'modifier', label: '修改人', width: 100},
-            {prop: 'modifiedTime', label: '修改时间', width: 160}
-          ]
+          operation: {change: true, remove: true}
         },
         tableData: [],
         formMeta: {
@@ -90,7 +107,8 @@
             name: [
               {required: true, message: '名称不能为空', trigger: 'blur'}
             ]
-          }
+          },
+          roleIdNameList: []
         },
         formData: {
           id: null,
@@ -105,9 +123,11 @@
     },
     mounted () {
       this.refreshTable()
+      this.refreshRoleIdNameList()
     },
     methods: {
       onClickAdd () {
+        this.formData.id = null
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
         this.formMeta.visible = true
@@ -119,10 +139,13 @@
       onClickChangeRow (row) {
         this.formData.id = row.id
         this.formData.name = row.name
-        this.formData.description = row.description
+        this.formData.url = row.url
+        this.formData.anonymous = row.anonymous
+        this.formData.affirmative = row.affirmative
+        this.formData.roleIds = row.roleIds
+        this.formData.priority = row.priority
 
         this.formMeta.showId = true
-        this.formMeta.nameDisabled = true
         this.formMeta.visible = true
       },
       onClickRemoveRow (row) {
@@ -174,6 +197,23 @@
               this.$message.error('数据加载失败！')
           }
         })
+      },
+      refreshRoleIdNameList () {
+        this.$api.fetchRoleIdNameList().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.formMeta.roleIdNameList = response.data.data
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
+      },
+      convertRoleIds2NamesString (roleIds) {
+        return roleIds.map(id => this.formMeta.roleIdNameList
+          .find(idName => idName.id === id))
+          .filter(it => it !== undefined)
+          .map(it => it.name).join('，')
       }
     }
   }

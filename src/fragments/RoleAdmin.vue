@@ -91,6 +91,7 @@
     },
     methods: {
       onClickAdd () {
+        this.formData.id = null
         this.formMeta.showId = false
         this.formMeta.visible = true
         // 避免首次加载对象不存在

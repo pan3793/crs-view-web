@@ -31,6 +31,9 @@ export default {
   removeRoleById (id) {
     return axios.delete(`/crs-auth-server/api/role/${id}`)
   },
+  fetchRoleIdNameList () {
+    return axios.get('/crs-auth-server/api/role/idNameList')
+  },
   // acl
   fetchAcls () {
     return axios.get('/crs-auth-server/api/acl')

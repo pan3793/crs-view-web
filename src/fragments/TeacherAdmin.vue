@@ -92,18 +92,13 @@
         }
       }
     },
-    computed: {
-      // 索引，辅助查找
-      userNameIdMap () {
-        return new Map(this.formMeta.userList.map((it) => [it.name, it.id]))
-      }
-    },
     mounted () {
       this.refreshTable()
     },
     methods: {
       onClickAdd () {
         this.refreshUserIdNameList()
+        this.formData.id = null
         this.formMeta.showId = false
         this.formMeta.userNameDisabled = false
         this.formMeta.visible = true
@@ -143,7 +138,6 @@
         })
       },
       onUserNameSelectChange (userName) {
-        // this.formData.userId = this.userNameIdMap.get(userName)
         this.formData.userId = this.formMeta.userList.find((it) => it.name === userName).id
       },
       onClickSubmit () {

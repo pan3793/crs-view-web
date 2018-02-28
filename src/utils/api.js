@@ -76,6 +76,7 @@ export default {
   removeCategoryById (id) {
     return axios.delete(`/crs-server/api/category/${id}`)
   },
+  // course
   fetchCourses () {
     return axios.get('/crs-server/api/course')
   },

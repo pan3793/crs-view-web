@@ -19,10 +19,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop='id' label="Id" width="60"></el-table-column>
-      <el-table-column prop='name' label="名称" width="200"></el-table-column>
-      <el-table-column prop='url' label="URL" width="500"></el-table-column>
-      <el-table-column prop='anonymous' label="匿名访问" width="80">
+      <el-table-column prop="id" label="Id" width="60"></el-table-column>
+      <el-table-column prop="name" label="名称" width="200"></el-table-column>
+      <el-table-column prop="url" label="URL" width="500"></el-table-column>
+      <el-table-column prop="anonymous" label="匿名访问" width="80">
         <template slot-scope="scope">
           <el-tag size="small" :type="scope.row.anonymous === true ? 'success' : 'danger'" disable-transitions>
             {{ scope.row.anonymous === true ? '启用' : '禁用' }}

@@ -36,68 +36,31 @@
             <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
               <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
             </el-form-item>
-            <el-form-item prop="id" label="分类Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
+            <el-form-item prop="categoryId" label="分类Id" :label-width="formMeta.labelWidth">
+              <el-input v-model.trim="formData.categoryId" auto-complete="off" disabled></el-input>
             </el-form-item>
-            <el-form-item prop="name" label="分类名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
+            <el-form-item prop="categoryName" label="分类名称" :label-width="formMeta.labelWidth" required>
+              <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
+                <el-option
+                  v-for="item in formMeta.categoryList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+                </el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
+            <el-form-item prop="teacherId" label="教师Id" :label-width="formMeta.labelWidth" required>
+              <el-input v-model.trim="formData.teacherId" auto-complete="off" disabled></el-input>
             </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
-              <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item prop="id" label="Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="id" label="分类Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="分类名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
-              <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item prop="id" label="Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="id" label="分类Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="分类名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
+            <el-form-item prop="teacherName" label="教师姓名" :label-width="formMeta.labelWidth" required>
+              <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
+                <el-option
+                  v-for="item in formMeta.teacherList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
               <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
@@ -130,6 +93,8 @@
             {prop: 'name', label: '名称', width: 200},
             {prop: 'categoryName', label: '分类', width: 100},
             {prop: 'teacherName', label: '教师', width: 100},
+            {prop: 'cards', label: '卡片', width: 200},
+            {prop: 'imageUrl', label: '图片', width: 100},
             {prop: 'description', label: '描述', minWidth: 300},
             {prop: 'creator', label: '创建人', width: 100},
             {prop: 'createTime', label: '创建时间', width: 160},
@@ -142,7 +107,11 @@
           visible: false,
           showId: false,
           nameDisabled: false,
-          labelWidth: '50px',
+          teacherNameDisabled: false,
+          categoryNameDisabled: false,
+          labelWidth: '80px',
+          teacherList: [],
+          categoryList: [],
           rules: {
             name: [
               {required: true, message: '名称不能为空', trigger: 'blur'}
@@ -156,9 +125,7 @@
           categoryName: '',
           teacherId: null,
           teacherName: '',
-          description: '',
-          summary: '{}',
-          content: '{}'
+          description: ''
         }
       }
     },
@@ -167,6 +134,8 @@
     },
     methods: {
       onClickAdd () {
+        this.refreshTeacherIdNameList()
+        this.refreshCategoryIdNameList()
         this.formData.id = null
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
@@ -179,6 +148,10 @@
       onClickChangeRow (row) {
         this.formData.id = row.id
         this.formData.name = row.name
+        this.formData.categoryId = row.categoryId
+        this.formData.categoryName = row.categoryName
+        this.formData.teacherId = row.teacherId
+        this.formData.teacherName = row.teacherName
         this.formData.description = row.description
 
         this.formMeta.showId = true
@@ -205,6 +178,12 @@
           // do nothing
         })
       },
+      onCategoryNameSelectChange (categoryName) {
+        this.formData.categoryId = this.formMeta.categoryList.find((it) => it.name === categoryName).id
+      },
+      onTeacherNameSelectChange (teacherName) {
+        this.formData.teacherId = this.formMeta.teacherList.find((it) => it.name === teacherName).id
+      },
       onClickSubmit () {
         this.$refs['form'].validate((valid) => {
           if (valid) {
@@ -229,6 +208,28 @@
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.tableData = response.data.data
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
+      },
+      refreshTeacherIdNameList () {
+        this.$api.fetchTeacherIdNameList().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.formMeta.teacherList = response.data.data
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
+      },
+      refreshCategoryIdNameList () {
+        this.$api.fetchCategoryIdNameList().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.formMeta.categoryList = response.data.data
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

@@ -18,6 +18,9 @@ export default {
   removeUserById (id) {
     return axios.delete(`/crs-auth-server/api/user/${id}`)
   },
+  fetchTeacherIdNameList () {
+    return axios.get('/crs-auth-server/api/user/teacherIdNameList')
+  },
   // role
   fetchRoles () {
     return axios.get('/crs-auth-server/api/role')
@@ -66,6 +69,9 @@ export default {
   // category
   fetchCategories () {
     return axios.get('/crs-server/api/category')
+  },
+  fetchCategoryIdNameList () {
+    return axios.get('/crs-server/api/category/idNameList')
   },
   fetchCategoryById (id) {
     return axios.get(`/crs-server/api/category/${id}`)

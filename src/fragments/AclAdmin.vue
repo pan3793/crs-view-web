@@ -19,9 +19,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="id" label="Id" width="60"></el-table-column>
-      <el-table-column prop="name" label="名称" width="200"></el-table-column>
-      <el-table-column prop="url" label="URL" width="500"></el-table-column>
+      <el-table-column v-for="item in tableMeta.columns_start"
+                       :key="item.prop"
+                       :prop="item.prop"
+                       :label="item.label"
+                       :width="item.width"
+                       :min-width="item.minWidth"></el-table-column>
+
       <el-table-column prop="anonymous" label="匿名访问" width="80">
         <template slot-scope="scope">
           <el-tag size="small" :type="scope.row.anonymous === true ? 'success' : 'danger'" disable-transitions>
@@ -41,12 +45,13 @@
           {{ convertRoleIds2NamesString(scope.row.roleIds) }}
         </template>
       </el-table-column>
-      <el-table-column prop='priority' label="优先级" width="80"></el-table-column>
-      <el-table-column prop='creator' label="创建人" width="100"></el-table-column>
-      <el-table-column prop='createTime' label="创建时间" width="160"></el-table-column>
-      <el-table-column prop='modifier' label="修改人" width="100"></el-table-column>
-      <el-table-column prop='modifiedTime' label="修改时间" width="160"></el-table-column>
 
+      <el-table-column v-for="item in tableMeta.columns_end"
+                       :key="item.prop"
+                       :prop="item.prop"
+                       :label="item.label"
+                       :width="item.width"
+                       :min-width="item.minWidth"></el-table-column>
     </el-table>
 
     <el-dialog title="访问控制列表" :visible.sync="formMeta.visible">
@@ -69,7 +74,7 @@
         <el-form-item prop="roleIds" label="授权角色" :label-width="formMeta.labelWidth" required>
           <el-select v-model.trim="formData.roleIds" style="width: 100%" multiple>
             <el-option
-              v-for="item in formMeta.roleIdNameList"
+              v-for="item in roleIdNameList"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -95,8 +100,21 @@
     name: 'AclAdmin',
     data () {
       return {
+        roleIdNameList: [],
         tableMeta: {
-          operation: {change: true, remove: true}
+          operation: {change: true, remove: true},
+          columns_start: [
+            {prop: 'id', label: 'Id', width: 60},
+            {prop: 'name', label: '名称', width: 200},
+            {prop: 'url', label: 'URL', width: 500}
+          ],
+          columns_end: [
+            {prop: 'priority', label: '优先级', width: 80},
+            {prop: 'creator', label: '创建人', width: 100},
+            {prop: 'createTime', label: '创建时间', width: 160},
+            {prop: 'modifier', label: '修改人', width: 100},
+            {prop: 'modifiedTime', label: '修改时间', width: 160}
+          ]
         },
         tableData: [],
         formMeta: {
@@ -107,8 +125,7 @@
             name: [
               {required: true, message: '名称不能为空', trigger: 'blur'}
             ]
-          },
-          roleIdNameList: []
+          }
         },
         formData: {
           id: null,
@@ -202,7 +219,7 @@
         this.$api.fetchRoleIdNameList().then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
-              this.formMeta.roleIdNameList = response.data.data
+              this.roleIdNameList = response.data.data
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')
@@ -210,7 +227,7 @@
         })
       },
       convertRoleIds2NamesString (roleIds) {
-        return roleIds.map(id => this.formMeta.roleIdNameList
+        return roleIds.map(id => this.roleIdNameList
           .find(idName => idName.id === id))
           .filter(it => it !== undefined)
           .map(it => it.name).join('，')

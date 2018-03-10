@@ -21,6 +21,9 @@ export default {
   fetchTeacherIdNameList () {
     return axios.get('/crs-auth-server/api/user/teacherIdNameList')
   },
+  resetPasswordById (id, newPassword) {
+    return axios.post(`/crs-auth-server/api/user/${id}/resetPassword`, {newPassword}, {transformRequest: data => qs.stringify(data)})
+  },
   // role
   fetchRoles () {
     return axios.get('/crs-auth-server/api/role')

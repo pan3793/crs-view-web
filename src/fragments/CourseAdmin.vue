@@ -20,7 +20,33 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column v-for="item in tableMeta.columns"
+          <el-table-column v-for="item in tableMeta.columns_start"
+                           :key="item.prop"
+                           :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :min-width="item.minWidth"></el-table-column>
+          <el-table-column prop="cards" label="卡片" width="200">
+            <template slot-scope="scope">
+              <el-button type="info" size="small" plain>按钮</el-button>
+              <el-button type="text" size="mini">新增</el-button>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="imageUrl" label="图片" width="100">
+            <template slot-scope="scope">
+              <el-button v-if="tableMeta.operation.change"
+                         type="text" size="mini"
+                         @click="onClickChangeRow(scope.row)">修改
+              </el-button>
+              <el-button v-if="tableMeta.operation.remove"
+                         type="text" size="mini"
+                         @click="onClickRemoveRow(scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
+
+          <el-table-column v-for="item in tableMeta.columns_end"
                            :key="item.prop"
                            :prop="item.prop"
                            :label="item.label"
@@ -40,7 +66,8 @@
               <el-input v-model.trim="formData.categoryId" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item prop="categoryName" label="分类名称" :label-width="formMeta.labelWidth" required>
-              <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
+              <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable
+                         @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
                 <el-option
                   v-for="item in formMeta.categoryList"
                   :key="item.id"
@@ -53,7 +80,8 @@
               <el-input v-model.trim="formData.teacherId" auto-complete="off" disabled></el-input>
             </el-form-item>
             <el-form-item prop="teacherName" label="教师姓名" :label-width="formMeta.labelWidth" required>
-              <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
+              <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable
+                         @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
                 <el-option
                   v-for="item in formMeta.teacherList"
                   :key="item.id"
@@ -88,13 +116,13 @@
       return {
         tableMeta: {
           operation: {change: true, remove: true},
-          columns: [
+          columns_start: [
             {prop: 'id', label: 'Id', width: 60},
             {prop: 'name', label: '名称', width: 200},
             {prop: 'categoryName', label: '分类', width: 100},
-            {prop: 'teacherName', label: '教师', width: 100},
-            {prop: 'cards', label: '卡片', width: 200},
-            {prop: 'imageUrl', label: '图片', width: 100},
+            {prop: 'teacherName', label: '教师', width: 100}
+          ],
+          columns_end: [
             {prop: 'description', label: '描述', minWidth: 300},
             {prop: 'creator', label: '创建人', width: 100},
             {prop: 'createTime', label: '创建时间', width: 160},

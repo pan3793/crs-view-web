@@ -102,6 +102,6 @@ export default {
     return axios.post(`/crs-server/api/course/${id}/bindImage`, {imageUrl}, {transformRequest: data => qs.stringify(data)})
   },
   removeImageById (id) {
-    return axios.post(`/crs-server/api/course/${id}/bindImage`)
+    return axios.post(`/crs-server/api/course/${id}/removeImage`)
   }
 }

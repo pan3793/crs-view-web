@@ -26,21 +26,24 @@
                            :label="item.label"
                            :width="item.width"
                            :min-width="item.minWidth"></el-table-column>
-          <el-table-column prop="cards" label="卡片" width="200">
+          <el-table-column prop="cards" label="卡片" width="300">
             <template slot-scope="scope">
               <el-button type="success" size="small" plain>按钮</el-button>
               <el-button type="text" size="mini">新增</el-button>
             </template>
           </el-table-column>
 
-          <el-table-column prop="imageUrl" label="图片" width="300">
+          <el-table-column prop="imageUrl" label="图片" width="100">
             <template slot-scope="scope">
-              <el-button type="success" size="small">
+              <el-button type="success" size="small"
+                         @click="onClickPreviewImage(scope.row)"
+                         v-if="!isBlank(scope.row.imageUrl)">
                 预览<i class="el-icon-picture el-icon--right"/>
               </el-button>
 
               <el-button type="primary" size="small"
-                         @click="onClickUploadImage(scope.row)">
+                         @click="onClickUploadImage(scope.row)"
+                         v-else>
                 上传<i class="el-icon-upload el-icon--right"/>
               </el-button>
             </template>
@@ -99,6 +102,18 @@
             <el-button type="primary" @click="onClickSubmit">确定</el-button>
           </div>
         </el-dialog>
+
+        <el-dialog title="预览图片" :visible.sync="previewImageMeta.visible" width="640px">
+          <div style="text-align: center">
+            <img :src="previewImageData.imageUrl" style="max-width: 600px; max-height: 480px;"/>
+          </div>
+          <div slot="footer" style="text-align: start">
+            <el-button type="warning" @click="onClickChangeImage">更换</el-button>
+            <el-button type="danger" @click="onClickRemoveImage">删除</el-button>
+            <el-button @click="previewImageMeta.visible = false" style="float: right">关闭</el-button>
+          </div>
+        </el-dialog>
+
 
         <el-dialog title="上传图片" :visible.sync="uploadImageMeta.visible" width="400px" :close-on-click-modal="false">
           <el-upload
@@ -177,6 +192,13 @@
           teacherName: '',
           description: ''
         },
+        previewImageMeta: {
+          visible: false
+        },
+        previewImageData: {
+          courseId: null,
+          imageUrl: ''
+        },
         uploadImageMeta: {
           visible: false,
           disabled: false,
@@ -195,6 +217,9 @@
       this.refreshTeacherIdNameList()
     },
     methods: {
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
       onClickAdd () {
         this.refreshTeacherIdNameList()
         this.refreshCategoryIdNameList()
@@ -235,6 +260,43 @@
                 this.$message.error('操作失败！')
             }
             this.refreshTable()
+          })
+        }).catch(() => {
+          // do nothing
+        })
+      },
+      onClickPreviewImage (row) {
+        this.previewImageData.courseId = row.id
+        this.previewImageData.imageUrl = row.imageUrl
+        this.previewImageMeta.visible = true
+      },
+      onClickChangeImage () {
+        this.previewImageMeta.visible = false
+        this.uploadImageData.fileList = []
+        this.uploadImageMeta.loading = false
+        this.uploadImageMeta.disabled = false
+        this.uploadImageData.courseId = this.previewImageData.courseId
+        // 避免闪屏
+        setTimeout(() => {
+          this.uploadImageMeta.visible = true
+        }, 300)
+      },
+      onClickRemoveImage () {
+        this.$confirm('您确定要删除该图片吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.removeImageById(this.previewImageData.courseId).then(response => {
+            switch (response.data.code) {
+              case Constant.SUCCESS_CODE:
+                this.$message.success('删除成功！')
+                this.previewImageMeta.visible = false
+                this.refreshTable()
+                break
+              case Constant.FAILURE_CODE:
+                this.$message.error('操作失败！')
+            }
           })
         }).catch(() => {
           // do nothing

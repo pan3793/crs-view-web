@@ -97,5 +97,11 @@ export default {
   },
   removeCourseById (id) {
     return axios.delete(`/crs-server/api/course/${id}`)
+  },
+  bindImageById (id, imageUrl) {
+    return axios.post(`/crs-server/api/course/${id}/bindImage`, {imageUrl}, {transformRequest: data => qs.stringify(data)})
+  },
+  removeImageById (id) {
+    return axios.post(`/crs-server/api/course/${id}/bindImage`)
   }
 }

@@ -28,20 +28,20 @@
                            :min-width="item.minWidth"></el-table-column>
           <el-table-column prop="cards" label="卡片" width="200">
             <template slot-scope="scope">
-              <el-button type="info" size="small" plain>按钮</el-button>
+              <el-button type="success" size="small" plain>按钮</el-button>
               <el-button type="text" size="mini">新增</el-button>
             </template>
           </el-table-column>
 
-          <el-table-column prop="imageUrl" label="图片" width="100">
+          <el-table-column prop="imageUrl" label="图片" width="300">
             <template slot-scope="scope">
-              <el-button v-if="tableMeta.operation.change"
-                         type="text" size="mini"
-                         @click="onClickChangeRow(scope.row)">修改
+              <el-button type="success" size="small">
+                预览<i class="el-icon-picture el-icon--right"/>
               </el-button>
-              <el-button v-if="tableMeta.operation.remove"
-                         type="text" size="mini"
-                         @click="onClickRemoveRow(scope.row)">删除
+
+              <el-button type="primary" size="small"
+                         @click="onClickUploadImage(scope.row)">
+                上传<i class="el-icon-upload el-icon--right"/>
               </el-button>
             </template>
           </el-table-column>
@@ -69,7 +69,7 @@
               <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable
                          @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
                 <el-option
-                  v-for="item in formMeta.categoryList"
+                  v-for="item in categoryList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.name">
@@ -83,7 +83,7 @@
               <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable
                          @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
                 <el-option
-                  v-for="item in formMeta.teacherList"
+                  v-for="item in teacherList"
                   :key="item.id"
                   :label="item.name"
                   :value="item.name">
@@ -99,6 +99,28 @@
             <el-button type="primary" @click="onClickSubmit">确定</el-button>
           </div>
         </el-dialog>
+
+        <el-dialog title="上传图片" :visible.sync="uploadImageMeta.visible" width="400px" :close-on-click-modal="false">
+          <el-upload
+            :disabled="uploadImageMeta.disabled"
+            accept="image/jpeg,image/png"
+            action="/crs-file-server/api/file/upload"
+            name="files"
+            :limit="1"
+            :file-list="uploadImageData.fileList"
+            drag
+            :show-file-list="true"
+            :before-upload="beforeImageUpload"
+            :on-success="onImageUploadSuccess"
+            :on-error="onImageUploadError">
+            <div v-loading="uploadImageMeta.loading" element-loading-text="正在上传，请稍后">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10MB</div>
+            </div>
+          </el-upload>
+        </el-dialog>
+
       </el-tab-pane>
       <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
       <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
@@ -114,6 +136,8 @@
     name: 'CourseAdmin',
     data () {
       return {
+        teacherList: [],
+        categoryList: [],
         tableMeta: {
           operation: {change: true, remove: true},
           columns_start: [
@@ -138,8 +162,6 @@
           teacherNameDisabled: false,
           categoryNameDisabled: false,
           labelWidth: '80px',
-          teacherList: [],
-          categoryList: [],
           rules: {
             name: [
               {required: true, message: '名称不能为空', trigger: 'blur'}
@@ -154,11 +176,23 @@
           teacherId: null,
           teacherName: '',
           description: ''
+        },
+        uploadImageMeta: {
+          visible: false,
+          disabled: false,
+          loading: false
+        },
+        uploadImageData: {
+          courseId: null,
+          imageUrl: '',
+          fileList: []
         }
       }
     },
     mounted () {
       this.refreshTable()
+      this.refreshCategoryIdNameList()
+      this.refreshTeacherIdNameList()
     },
     methods: {
       onClickAdd () {
@@ -206,11 +240,63 @@
           // do nothing
         })
       },
+      onClickUploadImage (row) {
+        this.uploadImageData.fileList = []
+        this.uploadImageMeta.loading = false
+        this.uploadImageMeta.disabled = false
+        this.uploadImageMeta.visible = true
+        this.uploadImageData.courseId = row.id
+      },
+      beforeImageUpload (file) {
+        const isJPG = file.type === 'image/jpeg'
+        const isPNG = file.type === 'image/png'
+        const isLt10M = file.size / 1024 / 1024 < 10
+
+        if (!isJPG && !isPNG) {
+          this.$message.error('上传图片必须是 JPG/PNG 格式!')
+          return false
+        }
+        if (!isLt10M) {
+          this.$message.error('上传图片大小不能超过 10MB!')
+          return false
+        }
+        this.uploadImageMeta.loading = true
+        return true
+      },
+      onImageUploadSuccess (response, file, fileList) {
+        switch (response.code) {
+          case Constant.SUCCESS_CODE:
+            this.uploadImageData.imageUrl = response.data.successes[0].url
+            this.$api.bindImageById(this.uploadImageData.courseId, this.uploadImageData.imageUrl).then(response => {
+              switch (response.data.code) {
+                case Constant.SUCCESS_CODE:
+                  this.$message.success('设定图片成功！')
+                  this.uploadImageMeta.visible = false
+                  this.uploadImageMeta.loading = false
+                  this.refreshTable()
+                  break
+                case Constant.FAILURE_CODE:
+                  this.$message.error('绑定图片出错！')
+                  console.error(response.data)
+              }
+            })
+            break
+          case Constant.FAILURE_CODE:
+            this.$message.error('上传图片出错！')
+            console.error(response.data)
+            this.uploadImageMeta.loading = false
+        }
+      },
+      onImageUploadError (err, file, fileList) {
+        console.error(err)
+        this.$message.error('上传图片出错')
+        this.uploadImageMeta.loading = false
+      },
       onCategoryNameSelectChange (categoryName) {
-        this.formData.categoryId = this.formMeta.categoryList.find((it) => it.name === categoryName).id
+        this.formData.categoryId = this.categoryList.find((it) => it.name === categoryName).id
       },
       onTeacherNameSelectChange (teacherName) {
-        this.formData.teacherId = this.formMeta.teacherList.find((it) => it.name === teacherName).id
+        this.formData.teacherId = this.teacherList.find((it) => it.name === teacherName).id
       },
       onClickSubmit () {
         this.$refs['form'].validate((valid) => {
@@ -246,7 +332,7 @@
         this.$api.fetchTeacherIdNameList().then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
-              this.formMeta.teacherList = response.data.data
+              this.teacherList = response.data.data
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')
@@ -257,7 +343,7 @@
         this.$api.fetchCategoryIdNameList().then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
-              this.formMeta.categoryList = response.data.data
+              this.categoryList = response.data.data
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

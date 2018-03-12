@@ -234,7 +234,6 @@
         this.resetPasswordFormData.newPasswordAgain = ''
 
         this.resetPasswordFormMeta.visible = true
-
       },
       onClickSubmit () {
         this.$refs['form'].validate((valid) => {

@@ -114,7 +114,6 @@
           </div>
         </el-dialog>
 
-
         <el-dialog title="上传图片" :visible.sync="uploadImageMeta.visible" width="400px" :close-on-click-modal="false">
           <el-upload
             :disabled="uploadImageMeta.disabled"
@@ -135,6 +134,8 @@
             </div>
           </el-upload>
         </el-dialog>
+
+        <el-dialog title="卡片" :visible.sync="cardMeta.visible"></el-dialog>
 
       </el-tab-pane>
       <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
@@ -208,6 +209,12 @@
           courseId: null,
           imageUrl: '',
           fileList: []
+        },
+        cardMeta: {
+          visible: true
+        },
+        cardData: {
+          title: ''
         }
       }
     },

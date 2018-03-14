@@ -1,147 +1,145 @@
 <template>
-  <div style="padding: 20px 30px; text-align: start">
-    <el-tabs type="card">
-      <el-tab-pane label="课程管理">
-        <div>
-          <el-button type="primary" @click="onClickAdd">添加</el-button>
+  <div style="padding: 30px; text-align: start">
+
+    <div>
+      <el-button type="primary" @click="onClickAdd">添加</el-button>
+    </div>
+
+    <!--动态构建table-->
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column label="操作" width="90">
+        <template slot-scope="scope">
+          <el-button v-if="tableMeta.operation.change"
+                     type="text" size="mini"
+                     @click="onClickChangeRow(scope.row)">修改
+          </el-button>
+          <el-button v-if="tableMeta.operation.remove"
+                     type="text" size="mini"
+                     @click="onClickRemoveRow(scope.row)">删除
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column v-for="item in tableMeta.columns_start"
+                       :key="item.prop"
+                       :prop="item.prop"
+                       :label="item.label"
+                       :width="item.width"
+                       :min-width="item.minWidth"></el-table-column>
+      <el-table-column prop="cards" label="卡片" width="300">
+        <template slot-scope="scope">
+          <el-button type="success" size="small" plain>按钮</el-button>
+          <el-button type="text" size="mini">新增</el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="imageUrl" label="图片" width="100">
+        <template slot-scope="scope">
+          <el-button type="success" size="small"
+                     @click="onClickPreviewImage(scope.row)"
+                     v-if="!isBlank(scope.row.imageUrl)">
+            预览<i class="el-icon-picture el-icon--right"/>
+          </el-button>
+
+          <el-button type="primary" size="small"
+                     @click="onClickUploadImage(scope.row)"
+                     v-else>
+            上传<i class="el-icon-upload el-icon--right"/>
+          </el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-for="item in tableMeta.columns_end"
+                       :key="item.prop"
+                       :prop="item.prop"
+                       :label="item.label"
+                       :width="item.width"
+                       :min-width="item.minWidth"></el-table-column>
+    </el-table>
+
+    <el-dialog title="课程" :visible.sync="formMeta.visible">
+      <el-form :model="formData" :rules="formMeta.rules" ref="form" @submit.native.prevent>
+        <el-form-item prop="id" label="Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
+          <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
+          <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
+        </el-form-item>
+        <el-form-item prop="categoryId" label="分类Id" :label-width="formMeta.labelWidth">
+          <el-input v-model.trim="formData.categoryId" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="categoryName" label="分类名称" :label-width="formMeta.labelWidth" required>
+          <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable
+                     @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
+            <el-option
+              v-for="item in categoryList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="teacherId" label="教师Id" :label-width="formMeta.labelWidth" required>
+          <el-input v-model.trim="formData.teacherId" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="teacherName" label="教师姓名" :label-width="formMeta.labelWidth" required>
+          <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable
+                     @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
+            <el-option
+              v-for="item in teacherList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
+          <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="formMeta.visible = false">取消</el-button>
+        <el-button type="primary" @click="onClickSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="预览图片" :visible.sync="previewImageMeta.visible" width="640px">
+      <div style="text-align: center">
+        <img :src="previewImageData.imageUrl" style="max-width: 600px; max-height: 480px;"/>
+      </div>
+      <div slot="footer" style="text-align: start">
+        <el-button type="warning" @click="onClickChangeImage">更换</el-button>
+        <el-button type="danger" @click="onClickRemoveImage">删除</el-button>
+        <el-button @click="previewImageMeta.visible = false" style="float: right">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="上传图片" :visible.sync="uploadImageMeta.visible" width="400px" :close-on-click-modal="false">
+      <el-upload
+        :disabled="uploadImageMeta.disabled"
+        accept="image/jpeg,image/png"
+        action="/crs-file-server/api/file/upload"
+        name="files"
+        :limit="1"
+        :file-list="uploadImageData.fileList"
+        drag
+        :show-file-list="true"
+        :before-upload="beforeImageUpload"
+        :on-success="onImageUploadSuccess"
+        :on-error="onImageUploadError">
+        <div v-loading="uploadImageMeta.loading" element-loading-text="正在上传，请稍后">
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10MB</div>
         </div>
+      </el-upload>
+    </el-dialog>
 
-        <!--动态构建table-->
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column label="操作" width="90">
-            <template slot-scope="scope">
-              <el-button v-if="tableMeta.operation.change"
-                         type="text" size="mini"
-                         @click="onClickChangeRow(scope.row)">修改
-              </el-button>
-              <el-button v-if="tableMeta.operation.remove"
-                         type="text" size="mini"
-                         @click="onClickRemoveRow(scope.row)">删除
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="item in tableMeta.columns_start"
-                           :key="item.prop"
-                           :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :min-width="item.minWidth"></el-table-column>
-          <el-table-column prop="cards" label="卡片" width="300">
-            <template slot-scope="scope">
-              <el-button type="success" size="small" plain>按钮</el-button>
-              <el-button type="text" size="mini">新增</el-button>
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="imageUrl" label="图片" width="100">
-            <template slot-scope="scope">
-              <el-button type="success" size="small"
-                         @click="onClickPreviewImage(scope.row)"
-                         v-if="!isBlank(scope.row.imageUrl)">
-                预览<i class="el-icon-picture el-icon--right"/>
-              </el-button>
-
-              <el-button type="primary" size="small"
-                         @click="onClickUploadImage(scope.row)"
-                         v-else>
-                上传<i class="el-icon-upload el-icon--right"/>
-              </el-button>
-            </template>
-          </el-table-column>
-
-          <el-table-column v-for="item in tableMeta.columns_end"
-                           :key="item.prop"
-                           :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :min-width="item.minWidth"></el-table-column>
-        </el-table>
-
-        <el-dialog title="课程" :visible.sync="formMeta.visible">
-          <el-form :model="formData" :rules="formMeta.rules" ref="form" @submit.native.prevent>
-            <el-form-item prop="id" label="Id" :label-width="formMeta.labelWidth" v-if="formMeta.showId">
-              <el-input v-model.trim="formData.id" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="name" label="名称" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.name" auto-complete="off" :disabled="formMeta.nameDisabled"></el-input>
-            </el-form-item>
-            <el-form-item prop="categoryId" label="分类Id" :label-width="formMeta.labelWidth">
-              <el-input v-model.trim="formData.categoryId" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="categoryName" label="分类名称" :label-width="formMeta.labelWidth" required>
-              <el-select v-model.trim="formData.categoryName" style="width: 100%" filterable
-                         @change="onCategoryNameSelectChange" :disabled="formMeta.categoryNameDisabled">
-                <el-option
-                  v-for="item in categoryList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="teacherId" label="教师Id" :label-width="formMeta.labelWidth" required>
-              <el-input v-model.trim="formData.teacherId" auto-complete="off" disabled></el-input>
-            </el-form-item>
-            <el-form-item prop="teacherName" label="教师姓名" :label-width="formMeta.labelWidth" required>
-              <el-select v-model.trim="formData.teacherName" style="width: 100%" filterable
-                         @change="onTeacherNameSelectChange" :disabled="formMeta.teacherNameDisabled">
-                <el-option
-                  v-for="item in teacherList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
-              <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="formMeta.visible = false">取消</el-button>
-            <el-button type="primary" @click="onClickSubmit">确定</el-button>
-          </div>
-        </el-dialog>
-
-        <el-dialog title="预览图片" :visible.sync="previewImageMeta.visible" width="640px">
-          <div style="text-align: center">
-            <img :src="previewImageData.imageUrl" style="max-width: 600px; max-height: 480px;"/>
-          </div>
-          <div slot="footer" style="text-align: start">
-            <el-button type="warning" @click="onClickChangeImage">更换</el-button>
-            <el-button type="danger" @click="onClickRemoveImage">删除</el-button>
-            <el-button @click="previewImageMeta.visible = false" style="float: right">关闭</el-button>
-          </div>
-        </el-dialog>
-
-        <el-dialog title="上传图片" :visible.sync="uploadImageMeta.visible" width="400px" :close-on-click-modal="false">
-          <el-upload
-            :disabled="uploadImageMeta.disabled"
-            accept="image/jpeg,image/png"
-            action="/crs-file-server/api/file/upload"
-            name="files"
-            :limit="1"
-            :file-list="uploadImageData.fileList"
-            drag
-            :show-file-list="true"
-            :before-upload="beforeImageUpload"
-            :on-success="onImageUploadSuccess"
-            :on-error="onImageUploadError">
-            <div v-loading="uploadImageMeta.loading" element-loading-text="正在上传，请稍后">
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10MB</div>
-            </div>
-          </el-upload>
-        </el-dialog>
-
-        <el-dialog title="卡片" :visible.sync="cardMeta.visible"></el-dialog>
-
-      </el-tab-pane>
-      <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
-      <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
-      <el-tab-pane label="配置管理" closable>配置管理</el-tab-pane>
-    </el-tabs>
+    <el-dialog title="卡片" :visible.sync="cardFormMeta.visible" width="1200px" top="10vh" :close-on-click-modal="false">
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cardFormMeta.visible = false">取消</el-button>
+        <el-button type="primary" @click="onClickSubmitCard">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -210,11 +208,21 @@
           imageUrl: '',
           fileList: []
         },
-        cardMeta: {
-          visible: true
+        cardFormMeta: {
+          visible: true,
+          showId: false,
+          labelWidth: '80px',
+          rules: {
+            title: [
+              {required: true, message: '标题不能为空', trigger: 'blur'}
+            ]
+          }
         },
-        cardData: {
-          title: ''
+        cardFormData: {
+          id: null,
+          title: '',
+          content: '',
+          fileIds: []
         }
       }
     },
@@ -384,6 +392,25 @@
           } else {
             return false
           }
+        })
+      },
+      onClickSubmitCard () {
+        this.$refs['cardForm'].validate((valid) => {
+          // if (valid) {
+          //   this.$api.saveCourse(this.formData).then(response => {
+          //     switch (response.data.code) {
+          //       case Constant.SUCCESS_CODE:
+          //         this.$message.success('修改成功！')
+          //         this.formMeta.visible = false
+          //         this.refreshTable()
+          //         break
+          //       case Constant.FAILURE_CODE:
+          //         this.$message.error('修改失败！')
+          //     }
+          //   })
+          // } else {
+          //   return false
+          // }
         })
       },
       refreshTable () {

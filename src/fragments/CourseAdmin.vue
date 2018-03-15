@@ -25,10 +25,23 @@
                        :label="item.label"
                        :width="item.width"
                        :min-width="item.minWidth"></el-table-column>
-      <el-table-column prop="cards" label="卡片" width="300">
+      <el-table-column prop="cardIds" label="卡片" width="300">
         <template slot-scope="scope">
-          <el-button type="success" size="small" plain>按钮</el-button>
-          <el-button type="text" size="mini">新增</el-button>
+          <!--<el-button type="success" size="small" plain>按钮</el-button>-->
+          <el-button v-for="card in scope.row.cards"
+                     :key="card.id"
+                     @click="onClickChangeCard(card.id)"
+                     type="success"
+                     size="small"
+                     plain>
+            {{card.name}}}
+          </el-button>
+
+          <el-button @click="onClickAddCard(scope.row.id)"
+                     type="text"
+                     size="mini">
+            新增
+          </el-button>
         </template>
       </el-table-column>
 
@@ -93,7 +106,7 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="description" label="描述" :label-width="formMeta.labelWidth">
-          <el-input type="textarea" v-model.trim="formData.description" auto-complete="off"></el-input>
+          <el-input type="textarea" :rows="6" v-model.trim="formData.description" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -120,7 +133,7 @@
         action="/crs-file-server/api/file/upload"
         name="files"
         :limit="1"
-        :file-list="uploadImageData.fileList"
+        :file-list="uploadImageDataExt.fileList"
         drag
         :show-file-list="true"
         :before-upload="beforeImageUpload"
@@ -129,13 +142,48 @@
         <div v-loading="uploadImageMeta.loading" element-loading-text="正在上传，请稍后">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10MB</div>
         </div>
+        <div class="el-upload__tip" slot="tip" style="text-align: center">只能上传jpg/png文件，且不超过10MB</div>
       </el-upload>
     </el-dialog>
 
     <el-dialog title="卡片" :visible.sync="cardFormMeta.visible" width="1200px" top="10vh" :close-on-click-modal="false">
-      <div slot="footer" class="dialog-footer">
+
+      <el-form :model="cardFormData" :rules="cardFormMeta.rules" ref="cardForm" @submit.native.prevent>
+        <el-form-item prop="id" label="Id" :label-width="cardFormMeta.labelWidth" v-if="cardFormMeta.showId">
+          <el-input v-model.trim="cardFormData.id" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="title" label="标题" :label-width="cardFormMeta.labelWidth" required>
+          <el-input v-model.trim="cardFormData.title" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="内容" :label-width="cardFormMeta.labelWidth" required>
+          <mavon-editor ref="md"
+                        default_open="preview"
+                        :value="cardFormData.content"
+                        :toolbars="cardFormMeta.toolbars"
+                        @imgAdd="onClickMdAddImage">
+          </mavon-editor>
+        </el-form-item>
+
+        <el-form-item label="附件" :label-width="cardFormMeta.labelWidth">
+          <!--file-list只是初始列表，非双向绑定-->
+          <el-upload
+            multiple
+            name="files"
+            action="/crs-file-server/api/file/upload"
+            :on-success="onCardFileUploadSuccess"
+            :on-error="onCardFileUploadError"
+            :before-remove="beforeRemoveCardFile"
+            :on-remove="onCardFileRemove"
+            :file-list="cardFormDataExt.fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div class="el-upload__tip" slot="tip">单个附件最大支持50M</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer" style="text-align: end">
+        <el-button type="danger" @click="onClickRemoveCard" style="float: left">删除</el-button>
         <el-button @click="cardFormMeta.visible = false">取消</el-button>
         <el-button type="primary" @click="onClickSubmitCard">确定</el-button>
       </div>
@@ -208,14 +256,52 @@
           imageUrl: '',
           fileList: []
         },
+        uploadImageDataExt: {
+          fileList: []
+        },
         cardFormMeta: {
           visible: true,
-          showId: false,
-          labelWidth: '80px',
+          showId: true,
+          labelWidth: '50px',
           rules: {
             title: [
               {required: true, message: '标题不能为空', trigger: 'blur'}
             ]
+          },
+          toolbars: {
+            bold: true, // 粗体
+            italic: true, // 斜体
+            header: true, // 标题
+            underline: true, // 下划线
+            strikethrough: true, // 中划线
+            mark: true, // 标记
+            superscript: true, // 上角标
+            subscript: true, // 下角标
+            quote: true, // 引用
+            ol: true, // 有序列表
+            ul: true, // 无序列表
+            link: true, // 链接
+            imagelink: true, // 图片链接
+            code: true, // code
+            table: true, // 表格
+            fullscreen: true, // 全屏编辑
+            readmodel: true, // 沉浸式阅读
+            htmlcode: false, // 展示html源码
+            help: true, // 帮助
+            /* 1.3.5 */
+            undo: true, // 上一步
+            redo: true, // 下一步
+            trash: true, // 清空
+            save: false, // 保存（触发events中的save事件）
+            /* 1.4.2 */
+            navigation: true, // 导航目录
+            /* 2.1.8 */
+            alignleft: true, // 左对齐
+            aligncenter: true, // 居中
+            alignright: true, // 右对齐
+            /* 2.2.1 */
+            subfield: true, // 单双栏模式
+            preview: true
           }
         },
         cardFormData: {
@@ -223,6 +309,9 @@
           title: '',
           content: '',
           fileIds: []
+        },
+        cardFormDataExt: {
+          fileList: []
         }
       }
     },
@@ -234,6 +323,24 @@
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
+      },
+      extractFileIds: function (fileList) {
+        return this._.flatMap(fileList
+          .filter(file => file.status === 'success')
+          .map(file => file.response.data.successes)
+        ).map(it => it.id)
+      },
+      onClickMdAddImage (pos, file) {
+        this.$api.uploadFile(file).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$refs['md'].$img2Url(pos, response.data.data.successes[0].url)
+              break
+            case Constant.FAILURE_CODE:
+              console.error(response.data)
+              this.$message.error('图片添加失败！')
+          }
+        })
       },
       onClickAdd () {
         this.refreshTeacherIdNameList()
@@ -287,7 +394,7 @@
       },
       onClickChangeImage () {
         this.previewImageMeta.visible = false
-        this.uploadImageData.fileList = []
+        this.uploadImageDataExt.fileList = []
         this.uploadImageMeta.loading = false
         this.uploadImageMeta.disabled = false
         this.uploadImageData.courseId = this.previewImageData.courseId
@@ -318,7 +425,7 @@
         })
       },
       onClickUploadImage (row) {
-        this.uploadImageData.fileList = []
+        this.uploadImageDataExt.fileList = []
         this.uploadImageMeta.loading = false
         this.uploadImageMeta.disabled = false
         this.uploadImageMeta.visible = true
@@ -340,10 +447,10 @@
         this.uploadImageMeta.loading = true
         return true
       },
-      onImageUploadSuccess (response, file, fileList) {
-        switch (response.code) {
+      onImageUploadSuccess (data, file, fileList) {
+        switch (data.code) {
           case Constant.SUCCESS_CODE:
-            this.uploadImageData.imageUrl = response.data.successes[0].url
+            this.uploadImageData.imageUrl = data.data.successes[0].url
             this.$api.bindImageById(this.uploadImageData.courseId, this.uploadImageData.imageUrl).then(response => {
               switch (response.data.code) {
                 case Constant.SUCCESS_CODE:
@@ -360,7 +467,7 @@
             break
           case Constant.FAILURE_CODE:
             this.$message.error('上传图片出错！')
-            console.error(response.data)
+            console.error(data.data)
             this.uploadImageMeta.loading = false
         }
       },
@@ -368,6 +475,9 @@
         console.error(err)
         this.$message.error('上传图片出错')
         this.uploadImageMeta.loading = false
+      },
+      beforeRemoveCardFile (file, fileList) {
+        return this.$confirm(`确定移除${file.name}？`)
       },
       onCategoryNameSelectChange (categoryName) {
         this.formData.categoryId = this.categoryList.find((it) => it.name === categoryName).id
@@ -393,6 +503,17 @@
             return false
           }
         })
+      },
+      onCardFileUploadSuccess (response, file, fileList) {
+        console.error(response)
+        this.cardFormData.fileIds = this.extractFileIds(fileList)
+      },
+      onCardFileUploadError (err, file, fileList) {
+        console.error(err)
+        this.cardFormData.fileIds = this.extractFileIds(fileList)
+      },
+      onCardFileRemove (file, fileList) {
+        this.cardFormData.fileIds = this.extractFileIds(fileList)
       },
       onClickSubmitCard () {
         this.$refs['cardForm'].validate((valid) => {

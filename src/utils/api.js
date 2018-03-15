@@ -87,7 +87,7 @@ export default {
   },
   // course
   fetchCourses () {
-    return axios.get('/crs-server/api/course')
+    return axios.get('/crs-server/api/course/allWithCardName')
   },
   fetchCourseById (id) {
     return axios.get(`/crs-server/api/course/${id}`)
@@ -103,5 +103,18 @@ export default {
   },
   removeImageById (id) {
     return axios.post(`/crs-server/api/course/${id}/removeImage`)
+  },
+  addCardById (id, cardId) {
+    return axios.post(`/crs-server/api/course/${id}/addCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
+  },
+  removeCardById (id, cardId) {
+    return axios.post(`/crs-server/api/course/${id}/removeCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
+  },
+  // file
+  uploadFile (file) {
+    let param = new FormData()
+    param.append('files', file, file.name)
+    return axios.post('/crs-file-server/api/file/upload', param, {headers: {'Content-Type': 'multipart/form-data'}}
+    )
   }
 }

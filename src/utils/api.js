@@ -107,8 +107,21 @@ export default {
   addCardById (id, cardId) {
     return axios.post(`/crs-server/api/course/${id}/addCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
   },
-  removeCardById (id, cardId) {
+  removeCardByCourseId (id, cardId) {
     return axios.post(`/crs-server/api/course/${id}/removeCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
+  },
+  // card
+  fetchCards () {
+    return axios.get('/crs-server/api/card/')
+  },
+  fetchCardById (id) {
+    return axios.get(`/crs-server/api/card/${id}`)
+  },
+  saveCard (entity) {
+    return axios.post('/crs-server/api/card', entity)
+  },
+  removeCardById (id) {
+    return axios.delete(`/crs-server/api/card/${id}`)
   },
   // file
   uploadFile (file) {

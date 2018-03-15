@@ -27,10 +27,9 @@
                        :min-width="item.minWidth"></el-table-column>
       <el-table-column prop="cardIds" label="卡片" width="300">
         <template slot-scope="scope">
-          <!--<el-button type="success" size="small" plain>按钮</el-button>-->
           <el-button v-for="card in scope.row.cards"
                      :key="card.id"
-                     @click="onClickChangeCard(card.id)"
+                     @click="onClickChangeCard(scope.row.id, card.id)"
                      type="success"
                      size="small"
                      plain>
@@ -160,7 +159,7 @@
           <mavon-editor ref="md"
                         default_open="preview"
                         :value="cardFormData.content"
-                        :toolbars="cardFormMeta.toolbars"
+                        :toolbars="cardFormMeta.toolbarConfig"
                         @imgAdd="onClickMdAddImage">
           </mavon-editor>
         </el-form-item>
@@ -183,7 +182,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer" style="text-align: end">
-        <el-button type="danger" @click="onClickRemoveCard" style="float: left">删除</el-button>
+        <el-button v-if="cardFormMeta.showRemoveBtn" type="danger" @click="onClickRemoveCard" style="float: left">删除
+        </el-button>
         <el-button @click="cardFormMeta.visible = false">取消</el-button>
         <el-button type="primary" @click="onClickSubmitCard">确定</el-button>
       </div>
@@ -253,22 +253,22 @@
         },
         uploadImageData: {
           courseId: null,
-          imageUrl: '',
-          fileList: []
+          imageUrl: ''
         },
         uploadImageDataExt: {
           fileList: []
         },
         cardFormMeta: {
-          visible: true,
-          showId: true,
+          visible: false,
+          showId: false,
+          showRemoveBtn: false,
           labelWidth: '50px',
           rules: {
             title: [
               {required: true, message: '标题不能为空', trigger: 'blur'}
             ]
           },
-          toolbars: {
+          toolbarConfig: {
             bold: true, // 粗体
             italic: true, // 斜体
             header: true, // 标题
@@ -311,6 +311,7 @@
           fileIds: []
         },
         cardFormDataExt: {
+          courseId: null,
           fileList: []
         }
       }
@@ -502,6 +503,61 @@
           } else {
             return false
           }
+        })
+      },
+      onClickAddCard (courseId) {
+        this.cardFormData.id = null
+        this.cardFormData.title = ''
+        this.cardFormData.content = ''
+        this.cardFormData.fileIds = []
+        this.cardFormDataExt.courseId = courseId
+        this.cardFormDataExt.fileList = []
+
+        this.cardFormMeta.showId = false
+        this.cardFormMeta.showRemoveBtn = false
+        this.cardFormMeta.visible = true
+        if (this.$refs['cardForm']) {
+          this.$refs['cardForm'].resetFields()
+        }
+      },
+      onClickChangeCard (courseId, cardId) {
+        this.$api.fetchCardById(cardId).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.cardFormData.id = response.data.data.id
+              this.cardFormData.title = response.data.data.title
+              this.cardFormData.content = response.data.data.content
+              // this.cardFormData.fileIds = response.data.data.fileIds
+              this.cardFormDataExt.courseId = courseId
+              this.cardFormDataExt.fileList = []
+              this.cardFormMeta.showId = true
+              this.cardFormMeta.showRemoveBtn = true
+              this.cardFormMeta.visible = true
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('获取Card信息失败！')
+          }
+        })
+      },
+      onClickRemoveCard () {
+        this.$confirm('您确定要删除该卡片吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.removeCardByCourseId(this.cardFormDataExt.courseId, this.cardFormData.id).then(response => {
+            switch (response.data.code) {
+              case Constant.SUCCESS_CODE:
+                this.$message.success('删除成功！')
+                this.cardFormMeta.visible = false
+                this.refreshTable()
+                break
+              case Constant.FAILURE_CODE:
+                this.$message.error('操作失败！')
+            }
+          })
+        }).catch(() => {
+          // do nothing
         })
       },
       onCardFileUploadSuccess (response, file, fileList) {

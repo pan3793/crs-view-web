@@ -27,20 +27,22 @@
                        :min-width="item.minWidth"></el-table-column>
       <el-table-column prop="cardIds" label="卡片" width="300">
         <template slot-scope="scope">
-          <el-button v-for="card in scope.row.cards"
-                     :key="card.id"
-                     @click="onClickChangeCard(scope.row.id, card.id)"
-                     type="success"
-                     size="small"
-                     plain>
-            {{card.name}}}
-          </el-button>
-
-          <el-button @click="onClickAddCard(scope.row.id)"
-                     type="text"
-                     size="mini">
-            新增
-          </el-button>
+          <el-tooltip content="编辑卡片"
+                      v-for="card in scope.row.cards"
+                      :key="card.id">
+            <el-button @click="onClickChangeCard(scope.row.id, card.id)"
+                       type="success"
+                       size="small"
+                       plain>
+              {{ card.name }}
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="新增卡片">
+            <el-button @click="onClickAddCard(scope.row.id)"
+                       type="text"
+                       icon="el-icon-plus">
+            </el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
 
@@ -152,13 +154,13 @@
         <el-form-item prop="id" label="Id" :label-width="cardFormMeta.labelWidth" v-if="cardFormMeta.showId">
           <el-input v-model.trim="cardFormData.id" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item prop="title" label="标题" :label-width="cardFormMeta.labelWidth" required>
-          <el-input v-model.trim="cardFormData.title" auto-complete="off"></el-input>
+        <el-form-item prop="name" label="标题" :label-width="cardFormMeta.labelWidth" required>
+          <el-input v-model.trim="cardFormData.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="内容" :label-width="cardFormMeta.labelWidth" required>
+        <el-form-item label="内容" :label-width="cardFormMeta.labelWidth">
           <mavon-editor ref="md"
                         default_open="preview"
-                        :value="cardFormData.content"
+                        v-model="cardFormData.content"
                         :toolbars="cardFormMeta.toolbarConfig"
                         @imgAdd="onClickMdAddImage">
           </mavon-editor>
@@ -264,7 +266,7 @@
           showRemoveBtn: false,
           labelWidth: '50px',
           rules: {
-            title: [
+            name: [
               {required: true, message: '标题不能为空', trigger: 'blur'}
             ]
           },
@@ -306,7 +308,7 @@
         },
         cardFormData: {
           id: null,
-          title: '',
+          name: '',
           content: '',
           fileIds: []
         },
@@ -507,7 +509,7 @@
       },
       onClickAddCard (courseId) {
         this.cardFormData.id = null
-        this.cardFormData.title = ''
+        this.cardFormData.name = ''
         this.cardFormData.content = ''
         this.cardFormData.fileIds = []
         this.cardFormDataExt.courseId = courseId
@@ -521,18 +523,26 @@
         }
       },
       onClickChangeCard (courseId, cardId) {
-        this.$api.fetchCardById(cardId).then(response => {
-          switch (response.data.code) {
+        this.$api.fetchCardById(cardId).then(cardResponse => {
+          switch (cardResponse.data.code) {
             case Constant.SUCCESS_CODE:
-              this.cardFormData.id = response.data.data.id
-              this.cardFormData.title = response.data.data.title
-              this.cardFormData.content = response.data.data.content
-              // this.cardFormData.fileIds = response.data.data.fileIds
+              this.cardFormData.id = cardResponse.data.data.id
+              this.cardFormData.name = cardResponse.data.data.name
+              this.cardFormData.content = cardResponse.data.data.content
               this.cardFormDataExt.courseId = courseId
-              this.cardFormDataExt.fileList = []
               this.cardFormMeta.showId = true
               this.cardFormMeta.showRemoveBtn = true
               this.cardFormMeta.visible = true
+              // 获取文件列表
+              this.$api.fetchFilesByIds(cardResponse.data.data.fileIds).then(fileResponse => {
+                switch (fileResponse.data.code) {
+                  case Constant.SUCCESS_CODE:
+                    this.cardFormDataExt.fileList = fileResponse.data.data
+                    break
+                  case Constant.FAILURE_CODE:
+                    this.$message.error('获取File信息失败！')
+                }
+              })
               break
             case Constant.FAILURE_CODE:
               this.$message.error('获取Card信息失败！')
@@ -561,7 +571,6 @@
         })
       },
       onCardFileUploadSuccess (response, file, fileList) {
-        console.error(response)
         this.cardFormData.fileIds = this.extractFileIds(fileList)
       },
       onCardFileUploadError (err, file, fileList) {
@@ -573,21 +582,31 @@
       },
       onClickSubmitCard () {
         this.$refs['cardForm'].validate((valid) => {
-          // if (valid) {
-          //   this.$api.saveCourse(this.formData).then(response => {
-          //     switch (response.data.code) {
-          //       case Constant.SUCCESS_CODE:
-          //         this.$message.success('修改成功！')
-          //         this.formMeta.visible = false
-          //         this.refreshTable()
-          //         break
-          //       case Constant.FAILURE_CODE:
-          //         this.$message.error('修改失败！')
-          //     }
-          //   })
-          // } else {
-          //   return false
-          // }
+          if (valid) {
+            this.$api.saveCard(this.cardFormData).then(cardResponse => {
+              switch (cardResponse.data.code) {
+                case Constant.SUCCESS_CODE:
+                  this.$api.bindCardById(this.cardFormDataExt.courseId, cardResponse.data.data.id).then(courseResponse => {
+                    switch (courseResponse.data.code) {
+                      case Constant.SUCCESS_CODE:
+                        this.cardFormMeta.visible = false
+                        this.$message.success('操作成功！')
+                        this.refreshTable()
+                        break
+                      case Constant.FAILURE_CODE:
+                        console.error(courseResponse.data)
+                        this.$message.error('课程绑定卡片失败！')
+                    }
+                  })
+                  break
+                case Constant.FAILURE_CODE:
+                  console.error(cardResponse.data)
+                  this.$message.error('修改失败！')
+              }
+            })
+          } else {
+            return false
+          }
         })
       },
       refreshTable () {

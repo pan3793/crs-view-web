@@ -104,8 +104,8 @@ export default {
   removeImageById (id) {
     return axios.post(`/crs-server/api/course/${id}/removeImage`)
   },
-  addCardById (id, cardId) {
-    return axios.post(`/crs-server/api/course/${id}/addCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
+  bindCardById (id, cardId) {
+    return axios.post(`/crs-server/api/course/${id}/bindCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
   },
   removeCardByCourseId (id, cardId) {
     return axios.post(`/crs-server/api/course/${id}/removeCard`, {cardId}, {transformRequest: data => qs.stringify(data)})
@@ -129,5 +129,8 @@ export default {
     param.append('files', file, file.name)
     return axios.post('/crs-file-server/api/file/upload', param, {headers: {'Content-Type': 'multipart/form-data'}}
     )
+  },
+  fetchFilesByIds (ids) {
+    return axios.post(`/crs-file-server/api/file/queryByIds`, ids)
   }
 }

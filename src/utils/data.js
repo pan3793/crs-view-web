@@ -7,16 +7,7 @@ export default {
     {
       title: '分类',
       path: '/courseList',
-      children: [
-        {
-          title: '计算机',
-          path: '/courseList?category=cs'
-        },
-        {
-          title: '经济学',
-          path: '/courseList?category=economic'
-        }
-      ]
+      children: []
     },
     {
       title: '作业',

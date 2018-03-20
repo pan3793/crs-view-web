@@ -3,7 +3,8 @@
     <el-form :inline="true" :model="formInline" style="text-align: start">
       <el-form-item label="分类">
         <el-select v-model="formInline.region" placeholder="请选择" :clearable="true">
-          <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id"></el-option>
+          <el-option v-for="category in categories" :key="category.id" :label="category.name"
+                     :value="category.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="课程名">
@@ -49,6 +50,15 @@
           region: ''
         }
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        vm.$store.commit('changeSearchBarVisible', false)
+      })
+    },
+    beforeRouteLeave (to, from, next) {
+      this.$store.commit('changeSearchBarVisible', true)
+      next()
     },
     methods: {
       onSubmit () {

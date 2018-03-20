@@ -12,7 +12,6 @@
           :router="true"
           :default-active="menuActive"
           mode="horizontal"
-          @select="handleSelect"
           backgroud-color="blueviolet">
 
           <template v-for="item in menus">
@@ -42,7 +41,7 @@
         </el-menu>
       </el-col>
 
-      <el-col :span="5" :style="{visibility: searchBarVisibility ? 'visible': 'hidden'}">
+      <el-col :span="5" :style="{visibility: searchBarVisible ? 'visible': 'hidden'}">
         <el-input v-model="input" placeholder="请输入内容">
           <el-button slot="append" type="primary" icon="el-icon-search" @click="goCourseList"/>
         </el-input>
@@ -58,20 +57,40 @@
 </template>
 
 <script>
+  import * as Constant from '../utils/constant'
+
   export default {
     data () {
       return {
         menuActive: this.$route.path,
-        menus: this.$store.state.menus,
-        searchBarVisibility: this.$store.state.searchBarVisibility,
         input: ''
       }
     },
-    methods: {
-      handleSelect (key, keyPath) {
+    computed: {
+      menus () {
+        return this.$store.state.menus
       },
+      searchBarVisible () {
+        return this.$store.state.searchBarVisible
+      }
+    },
+    mounted () {
+      this.refreshCategories()
+    },
+    methods: {
       goCourseList () {
         this.$router.push('/courseList')
+      },
+      refreshCategories () {
+        this.$api.fetchCategoryIdNameList().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$store.commit('updateTopBarMenuCategories', response.data.data)
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('分类加载失败！')
+          }
+        })
       }
     }
   }

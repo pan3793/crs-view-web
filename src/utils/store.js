@@ -8,7 +8,19 @@ export default new Vuex.Store({
   state: {
     menus: data.menus,
     adminMenus: data.adminMenus,
-    searchBarVisibility: true
+    searchBarVisible: true
   },
-  mutations: {}
+  mutations: {
+    updateTopBarMenuCategories (state, categories) {
+      state.menus.find((it) => it.title === '分类').children =
+        categories.map(it => ({title: it.name, path: `/courseList?EQ_id=${it.id}`}))
+    },
+    changeSearchBarVisible (state, flag) {
+      if (typeof flag === 'boolean') {
+        state.searchBarVisible = flag
+      } else {
+        state.searchBarVisible = false
+      }
+    }
+  }
 })

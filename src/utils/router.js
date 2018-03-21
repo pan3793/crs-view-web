@@ -37,8 +37,9 @@ export default new Router({
           component: Classwork
         },
         {
-          path: 'courseList/:condition?',
-          component: CourseList
+          path: 'courseList',
+          component: CourseList,
+          props: (route) => ({query: route.query})
         },
         {
           path: 'exam',

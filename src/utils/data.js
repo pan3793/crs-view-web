@@ -22,14 +22,52 @@ export default {
       path: '/forum'
     }
   ],
-  categories: [
+  adminMenus: [
     {
-      id: 1,
-      name: '计算机'
+      title: '权限管理',
+      path: '/admin/auth',
+      children: [
+        {
+          title: '用户管理',
+          path: '/admin/auth/user'
+        },
+        {
+          title: '角色管理',
+          path: '/admin/auth/role'
+        },
+        {
+          title: '访问控制列表',
+          path: '/admin/auth/acl'
+        }
+      ]
+    },
+    // {
+    //   title: '教师管理',
+    //   path: '/admin/teacher'
+    // },
+    {
+      title: '分类管理',
+      path: '/admin/category'
     },
     {
-      id: 2,
-      name: '经济学'
+      title: '课程管理',
+      path: '/admin/course'
+    },
+    {
+      title: '题库管理',
+      path: '/admin/question'
+    },
+    {
+      title: '作业管理',
+      path: '/admin/classwork'
+    },
+    {
+      title: '考试管理',
+      path: '/admin/exam'
+    },
+    {
+      title: '论坛管理',
+      path: '/admin/forum'
     }
   ],
   courseCards: {
@@ -124,53 +162,5 @@ export default {
         content: ''
       }
     ]
-  },
-  adminMenus: [
-    {
-      title: '权限管理',
-      path: '/admin/auth',
-      children: [
-        {
-          title: '用户管理',
-          path: '/admin/auth/user'
-        },
-        {
-          title: '角色管理',
-          path: '/admin/auth/role'
-        },
-        {
-          title: '访问控制列表',
-          path: '/admin/auth/acl'
-        }
-      ]
-    },
-    // {
-    //   title: '教师管理',
-    //   path: '/admin/teacher'
-    // },
-    {
-      title: '分类管理',
-      path: '/admin/category'
-    },
-    {
-      title: '课程管理',
-      path: '/admin/course'
-    },
-    {
-      title: '题库管理',
-      path: '/admin/question'
-    },
-    {
-      title: '作业管理',
-      path: '/admin/classwork'
-    },
-    {
-      title: '考试管理',
-      path: '/admin/exam'
-    },
-    {
-      title: '论坛管理',
-      path: '/admin/forum'
-    }
-  ]
+  }
 }

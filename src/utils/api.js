@@ -92,6 +92,9 @@ export default {
   fetchCourseById (id) {
     return axios.get(`/crs-server/api/course/${id}`)
   },
+  queryCourse (query) {
+    return axios.post('/crs-server/api/course/query', query)
+  },
   saveCourse (entity) {
     return axios.post('/crs-server/api/course', entity)
   },

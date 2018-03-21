@@ -1,17 +1,19 @@
 <template>
   <div>
-    <el-form :inline="true" :model="formInline" style="text-align: start">
+    <el-form :inline="true" :model="formData" style="text-align: start">
       <el-form-item label="分类">
-        <el-select v-model="formInline.region" placeholder="请选择" :clearable="true">
-          <el-option v-for="category in categories" :key="category.id" :label="category.name"
-                     :value="category.id"></el-option>
+        <el-select v-model="formData.EQ_categoryId" placeholder="请选择" :clearable="true">
+          <el-option v-for="category in categoryList"
+                     :key="category.id"
+                     :label="category.name"
+                     :value="category.id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="课程名">
-        <el-input v-model="formInline.user"></el-input>
+        <el-input v-model="formData.LIKE_name"></el-input>
       </el-form-item>
       <el-form-item label="教师">
-        <el-input v-model="formInline.user"></el-input>
+        <el-input v-model="formData.EQ_teacherName"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit" icon="el-icon-search">搜索</el-button>
@@ -19,12 +21,24 @@
     </el-form>
 
 
+    <!--<el-row>-->
+    <!--<el-col :span="6" v-for="i in 20" :key="i" style="padding: 15px">-->
+    <!--<el-card :body-style="{ padding: '0px' }">-->
+    <!--<img src="http://101.132.159.21/res/1.jpg" style="width: 100%">-->
+    <!--<div>-->
+    <!--<el-button type="text" @click="goCourse()">精品课程</el-button>-->
+    <!--</div>-->
+    <!--</el-card>-->
+    <!--</el-col>-->
+    <!--</el-row>-->
     <el-row>
-      <el-col :span="6" v-for="i in 20" :key="i" style="padding: 15px">
+      <el-col :span="6" v-for="course in courses" :key="course.id" style="padding: 15px">
         <el-card :body-style="{ padding: '0px' }">
-          <img src="http://101.132.159.21/res/1.jpg" style="width: 100%">
+          <div style="width: 278px; height: 208px">
+            <img :src="course.imageUrl" style="min-width: 100%; height: 100%">
+          </div>
           <div>
-            <el-button type="text" @click="goCourse()">精品课程</el-button>
+            <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>
           </div>
         </el-card>
       </el-col>
@@ -32,22 +46,42 @@
 
     <el-pagination
       background
-      layout="prev, pager, next, jumper"
-      :page-size="20"
-      :total="56">
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-sizes="paginationMeta.sizes"
+      :current-page="paginationMeta.currentNumber"
+      @current-change="onPageNumChange"
+      :page-size="paginationMeta.size"
+      @size-change="onPageSizeChange"
+      :total="paginationMeta.total">
     </el-pagination>
 
   </div>
 </template>
 
 <script>
+  import * as Constant from '../utils/constant'
+
   export default {
+    props: {
+      query: Object
+    },
     data () {
       return {
-        categories: this.preset.categories,
-        formInline: {
-          user: '',
-          region: ''
+        categoryList: [],
+        courses: [],
+        formMeta: {},
+        formData: {
+          EQ_categoryId: this.query.EQ_categoryId || null,
+          LIKE_name: this.query.LIKE_name || '',
+          EQ_teacherName: this.query.EQ_teacherName || '',
+          P_NUM: this.query.P_NUM || 0,
+          P_SIZE: this.query.P_SIZE || 10
+        },
+        paginationMeta: {
+          sizes: [4, 10, 20, 50],
+          currentNumber: 0,
+          size: 0,
+          total: 0
         }
       }
     },
@@ -60,12 +94,48 @@
       this.$store.commit('changeSearchBarVisible', true)
       next()
     },
+    mounted () {
+      this.refreshCourses()
+      this.refreshCategoryIdNameList()
+    },
     methods: {
       onSubmit () {
-        console.log('submit!')
+        this.refreshCourses()
       },
-      goCourse () {
-        this.$router.push('/course/1')
+      goCourse (id) {
+        this.$router.push(`/course/${id}`)
+      },
+      onPageNumChange (pageNum) {
+        console.log(pageNum)
+        this.formData.P_NUM = pageNum - 1
+        this.refreshCourses()
+      },
+      onPageSizeChange (pageSize) {
+        this.formData.P_SIZE = pageSize
+        this.refreshCourses()
+      },
+      refreshCategoryIdNameList () {
+        this.$api.fetchCategoryIdNameList().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.categoryList = response.data.data
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
+      },
+      refreshCourses () {
+        this.$api.queryCourse(this.formData).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.courses = response.data.data.content
+              this.paginationMeta.total = response.data.data.totalElements
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
       }
     }
   }

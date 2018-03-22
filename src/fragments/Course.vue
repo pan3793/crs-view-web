@@ -89,7 +89,7 @@
   export default {
     data () {
       return {
-        course: this.preset.course
+        course: {}
       }
     },
     beforeRouteEnter (to, from, next) {

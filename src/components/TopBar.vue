@@ -42,8 +42,8 @@
       </el-col>
 
       <el-col :span="5" :style="{visibility: searchBarVisible ? 'visible': 'hidden'}">
-        <el-input v-model="input" placeholder="请输入内容">
-          <el-button slot="append" type="primary" icon="el-icon-search" @click="goCourseList"/>
+        <el-input v-model="searchInput" placeholder="请输入内容">
+          <el-button slot="append" type="primary" icon="el-icon-search" @click="goCourseList(searchInput)"/>
         </el-input>
       </el-col>
 
@@ -63,7 +63,7 @@
     data () {
       return {
         menuActive: this.$route.path,
-        input: ''
+        searchInput: ''
       }
     },
     computed: {
@@ -78,8 +78,9 @@
       this.refreshCategories()
     },
     methods: {
-      goCourseList () {
-        this.$router.push('/courseList')
+      goCourseList (courseName) {
+        this.$router.push(`/courseList?LIKE_name=${courseName}`)
+        this.searchInput = ''
       },
       refreshCategories () {
         this.$api.fetchCategoryIdNameList().then(response => {

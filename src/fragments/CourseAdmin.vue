@@ -330,7 +330,7 @@
       extractFileIds: function (fileList) {
         return this._.flatMap(fileList
           .filter(file => file.status === 'success')
-          .map(file => file.response.data.successes)
+          .map(file => file.response.data.successes || [])
         ).map(it => it.id)
       },
       onClickMdAddImage (pos, file) {
@@ -538,6 +538,9 @@
                 switch (fileResponse.data.code) {
                   case Constant.SUCCESS_CODE:
                     this.cardFormDataExt.fileList = fileResponse.data.data
+                    this.cardFormDataExt.fileList.forEach(file => {
+                      file['response'] = {data: {successes: file}}
+                    })
                     break
                   case Constant.FAILURE_CODE:
                     this.$message.error('获取File信息失败！')

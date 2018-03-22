@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column prop='affirmative' label="完全授权" width="80">
         <template slot-scope="scope">
-          <el-tag size="small" :type="scope.row.affirmative === true ? 'success' : 'danger'" disable-transitions>
+          <el-tag v-if="!scope.row.anonymous" size="small" :type="scope.row.affirmative === true ? 'success' : 'danger'" disable-transitions>
             {{ scope.row.affirmative === true ? '启用' : '禁用' }}
           </el-tag>
         </template>
@@ -68,10 +68,12 @@
         <el-form-item prop="anonymous" label="匿名访问" :label-width="formMeta.labelWidth" required>
           <el-switch v-model="formData.anonymous"></el-switch>
         </el-form-item>
-        <el-form-item prop="affirmative" label="完全授权" :label-width="formMeta.labelWidth" required>
+        <el-form-item v-if="!formData.anonymous"
+                      prop="affirmative" label="完全授权" :label-width="formMeta.labelWidth" required>
           <el-switch v-model="formData.affirmative"></el-switch>
         </el-form-item>
-        <el-form-item prop="roleIds" label="授权角色" :label-width="formMeta.labelWidth" required>
+        <el-form-item v-if="!formData.anonymous"
+                      prop="roleIds" label="授权角色" :label-width="formMeta.labelWidth">
           <el-select v-model.trim="formData.roleIds" style="width: 100%" multiple>
             <el-option
               v-for="item in roleIdNameList"

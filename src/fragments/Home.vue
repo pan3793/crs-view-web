@@ -1,30 +1,35 @@
 <template>
   <div>
     <el-carousel :interval="4000" type="card" height="360px">
-      <el-carousel-item v-for="item in 6" :key="item">
-        <h3>{{ item }}</h3>
+      <el-carousel-item v-for="course in allRecommendedCourses" :key="course.id">
+        <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
+        <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
       </el-carousel-item>
     </el-carousel>
 
     <el-row>
-      <el-col :span="12" style="padding: 10px" v-for="i in 7" :key="i">
-        <el-card>
+      <el-col :span="12" style="padding: 10px"
+              v-for="categoryWithCourse in categoryRecommendCourses" :key="categoryWithCourse.id"
+              v-if="!isEmpty(categoryWithCourse.courses)">
 
+        <el-card>
           <div slot="header" style="text-align: start">
-            计算机
+            {{categoryWithCourse.name}}
           </div>
 
           <el-row>
-            <el-col :span="12" v-for="i in 5" :key="i" style="padding: 15px">
+            <el-col :span="12" v-for="course in categoryWithCourse.courses" :key="course.id" style="padding: 15px">
               <el-card :body-style="{ padding: '0px' }">
-                <img src="http://101.132.159.21/res/1.jpg" class="image">
+                <div style="width: 247px; height: 208px">
+                  <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
+                  <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
+                </div>
                 <div>
-                  <el-button type="text" @click="goCourse()">精品课程</el-button>
+                  <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>
                 </div>
               </el-card>
             </el-col>
           </el-row>
-
         </el-card>
       </el-col>
 
@@ -35,15 +40,39 @@
 </template>
 
 <script>
+  import * as Constant from '../utils/constant'
+
   export default {
     data () {
       return {
-        currentDate: new Date()
+        allRecommendedCourses: [],
+        categoryRecommendCourses: []
       }
     },
+    mounted () {
+      this.refreshRecommendedCourses()
+    },
     methods: {
-      goCourse () {
-        this.$router.push('/course/1')
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
+      isEmpty (list) {
+        return (list == null || list === undefined || list.length === 0)
+      },
+      goCourse (id) {
+        this.$router.push(`/course/${id}`)
+      },
+      refreshRecommendedCourses () {
+        this.$api.fetchRecommendedCourses().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.allRecommendedCourses = response.data.data.all
+              this.categoryRecommendCourses = response.data.data.categories
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
       }
     }
   }
@@ -51,13 +80,13 @@
 
 <style>
   /*跑马灯*/
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-  }
+  /*.el-carousel__item h3 {*/
+  /*color: #475669;*/
+  /*font-size: 14px;*/
+  /*opacity: 0.75;*/
+  /*line-height: 200px;*/
+  /*margin: 0;*/
+  /*}*/
 
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;

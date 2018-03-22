@@ -87,6 +87,16 @@
       this.refreshCourses()
       this.refreshCategoryIdNameList()
     },
+    watch: {
+      '$route.query' (val) {
+        this.formData.EQ_categoryId = parseInt(val.EQ_categoryId) || null
+        this.formData.LIKE_name = val.LIKE_name || ''
+        this.formData.EQ_teacherName = val.EQ_teacherName || ''
+        this.formData.P_NUM = parseInt(val.P_NUM) || 0
+        this.formData.P_SIZE = parseInt(val.P_SIZE) || 10
+        this.refreshCourses()
+      }
+    },
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
@@ -110,10 +120,6 @@
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.categoryList = response.data.data
-              let old = this.formData.EQ_categoryId
-              console.log(typeof old)
-              this.formData.EQ_categoryId = 0
-              this.formData.EQ_categoryId = old
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

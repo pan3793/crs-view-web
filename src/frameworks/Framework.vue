@@ -1,7 +1,7 @@
 <template>
   <div style="min-height: 100%; display: flex; flex-direction: column;">
 
-    <div style="z-index: 10000; width: 100%; height: 60px; padding: 0; background: white;">
+    <div style="z-index: 1000; width: 100%; height: 60px; padding: 0; background: white;">
       <div style="height: 60px; padding: 0">
         <TopBar/>
       </div>

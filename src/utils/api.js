@@ -89,6 +89,9 @@ export default {
   fetchCourses () {
     return axios.get('/crs-server/api/course/allWithCardName')
   },
+  fetchRecommendedCourses () {
+    return axios.get('/crs-server/api/course/recommended')
+  },
   fetchCourseById (id) {
     return axios.get(`/crs-server/api/course/${id}`)
   },

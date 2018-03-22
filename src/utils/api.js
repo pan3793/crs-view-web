@@ -95,6 +95,9 @@ export default {
   fetchCourseById (id) {
     return axios.get(`/crs-server/api/course/${id}`)
   },
+  fetchCourseDetailById (id) {
+    return axios.get(`/crs-server/api/course/${id}/detail`)
+  },
   queryCourse (query) {
     return axios.post('/crs-server/api/course/query', query)
   },

@@ -20,12 +20,11 @@
       </el-form-item>
     </el-form>
 
-
     <el-row>
       <el-col :span="6" v-for="course in courses" :key="course.id" style="padding: 15px">
         <el-card :body-style="{ padding: '0px' }">
           <div style="width: 278px; height: 208px">
-            <img v-if="course.imageUrl" :src="course.imageUrl" style="min-width: 100%; height: 100%">
+            <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
             <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
           </div>
           <div>
@@ -89,6 +88,9 @@
       this.refreshCategoryIdNameList()
     },
     methods: {
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
       onSubmit () {
         this.refreshCourses()
       },

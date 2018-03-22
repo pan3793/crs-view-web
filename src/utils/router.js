@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Framework from '@/frameworks/Framework'
 import AdminFramework from '@/frameworks/AdminFramework'
+import Login from '@/frameworks/Login'
 import Home from '@/fragments/Home'
 import Classwork from '@/fragments/Classwork'
 import CourseList from '@/fragments/CourseList'
@@ -23,6 +24,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {path: '/', redirect: '/home'},
+    {
+      path: '/login',
+      component: Login
+    },
     {
       path: '/',
       component: Framework,

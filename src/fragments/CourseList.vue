@@ -21,16 +21,6 @@
     </el-form>
 
 
-    <!--<el-row>-->
-    <!--<el-col :span="6" v-for="i in 20" :key="i" style="padding: 15px">-->
-    <!--<el-card :body-style="{ padding: '0px' }">-->
-    <!--<img src="http://101.132.159.21/res/1.jpg" style="width: 100%">-->
-    <!--<div>-->
-    <!--<el-button type="text" @click="goCourse()">精品课程</el-button>-->
-    <!--</div>-->
-    <!--</el-card>-->
-    <!--</el-col>-->
-    <!--</el-row>-->
     <el-row>
       <el-col :span="6" v-for="course in courses" :key="course.id" style="padding: 15px">
         <el-card :body-style="{ padding: '0px' }">
@@ -54,7 +44,6 @@
       @size-change="onPageSizeChange"
       :total="paginationMeta.total">
     </el-pagination>
-
   </div>
 </template>
 
@@ -71,16 +60,16 @@
         courses: [],
         formMeta: {},
         formData: {
-          EQ_categoryId: this.query.EQ_categoryId || null,
+          EQ_categoryId: parseInt(this.query.EQ_categoryId) || null,
           LIKE_name: this.query.LIKE_name || '',
           EQ_teacherName: this.query.EQ_teacherName || '',
-          P_NUM: this.query.P_NUM || 0,
-          P_SIZE: this.query.P_SIZE || 10
+          P_NUM: parseInt(this.query.P_NUM) || 0,
+          P_SIZE: parseInt(this.query.P_SIZE) || 10
         },
         paginationMeta: {
           sizes: [4, 10, 20, 50],
-          currentNumber: 0,
-          size: 0,
+          currentNumber: parseInt(this.query.P_NUM) || 0,
+          size: parseInt(this.query.P_SIZE) || 10,
           total: 0
         }
       }
@@ -106,7 +95,6 @@
         this.$router.push(`/course/${id}`)
       },
       onPageNumChange (pageNum) {
-        console.log(pageNum)
         this.formData.P_NUM = pageNum - 1
         this.refreshCourses()
       },
@@ -119,6 +107,10 @@
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.categoryList = response.data.data
+              let old = this.formData.EQ_categoryId
+              console.log(typeof old)
+              this.formData.EQ_categoryId = 0
+              this.formData.EQ_categoryId = old
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

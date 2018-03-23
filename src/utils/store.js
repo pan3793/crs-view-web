@@ -1,14 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import data from './data'
+import * as func from './func'
+import _ from 'lodash'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // 菜单
     menus: data.menus,
     adminMenus: data.adminMenus,
-    searchBarVisible: true
+    // 搜索条
+    searchBarVisible: true,
+    // 登录信息
+    token: localStorage.token,
+    userInfo: func.parseJSON(localStorage.userInfo),
+    loginName: localStorage.loginName,
+    password: localStorage.password,
+    remember: localStorage.remember,
+    autoLogin: localStorage.autoLogin
   },
   mutations: {
     updateTopBarMenuCategories (state, categories) {
@@ -20,6 +31,54 @@ export default new Vuex.Store({
         state.searchBarVisible = flag
       } else {
         state.searchBarVisible = false
+      }
+    },
+    updateToken (state, val) {
+      state.token = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('token')
+      } else {
+        localStorage.token = val
+      }
+    },
+    updateUserInfo (state, val) {
+      state.userInfo = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('userInfo')
+      } else {
+        localStorage.userInfo = JSON.stringify(val)
+      }
+    },
+    updateLoginName (state, val) {
+      state.loginName = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('loginName')
+      } else {
+        localStorage.loginName = val
+      }
+    },
+    updatePassword (state, val) {
+      state.password = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('password')
+      } else {
+        localStorage.password = val
+      }
+    },
+    updateRemember (state, val) {
+      state.remember = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('remember')
+      } else {
+        localStorage.remember = val
+      }
+    },
+    updateAutoLogin (state, val) {
+      state.autoLogin = val
+      if (_.isEmpty(val)) {
+        localStorage.removeItem('autoLogin')
+      } else {
+        localStorage.autoLogin = val
       }
     }
   }

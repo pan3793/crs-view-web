@@ -2,7 +2,8 @@
   <div>
     <el-carousel :interval="4000" type="card" height="360px">
       <el-carousel-item v-for="course in allRecommendedCourses" :key="course.id">
-        <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
+        <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%"
+             @click="goCourse(course.id)">
         <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
       </el-carousel-item>
     </el-carousel>
@@ -79,15 +80,6 @@
 </script>
 
 <style>
-  /*跑马灯*/
-  /*.el-carousel__item h3 {*/
-  /*color: #475669;*/
-  /*font-size: 14px;*/
-  /*opacity: 0.75;*/
-  /*line-height: 200px;*/
-  /*margin: 0;*/
-  /*}*/
-
   .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;
   }
@@ -95,15 +87,4 @@
   .el-carousel__item:nth-child(2n+1) {
     background-color: #d3dce6;
   }
-
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
-
-  .image {
-    width: 100%;
-    display: block;
-  }
-
 </style>

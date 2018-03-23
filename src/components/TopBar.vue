@@ -6,7 +6,7 @@
         <i class="el-icon-edit"/><span>课程资源系统</span>
       </el-col>
 
-      <el-col :span="11">
+      <el-col :span="9">
         <!--动态构建二级菜单-->
         <el-menu
           :router="true"
@@ -47,9 +47,14 @@
         </el-input>
       </el-col>
 
-      <el-col :span="4">
-        <el-button type="primary" size="medium">登录</el-button>
-        <el-button type="warning" size="medium">注册</el-button>
+      <el-col :span="6">
+        <el-tooltip v-if="!isBlank(token)" class="item" effect="dark" placement="bottom"
+                    :content="'欢迎 ' + userInfo.name + ' 使用'">
+          <el-button type="text" size="medium">{{userInfo.name}}</el-button>
+        </el-tooltip>
+        <el-button v-if="!isBlank(token)" type="danger" size="medium">后台管理</el-button>
+        <el-button v-if="isBlank(token)" type="primary" size="medium">登录</el-button>
+        <el-button v-else type="warning" size="medium" @click="onClickLogout">注销</el-button>
       </el-col>
 
     </el-row>
@@ -72,12 +77,24 @@
       },
       searchBarVisible () {
         return this.$store.state.searchBarVisible
+      },
+      token () {
+        return this.$store.state.token
+      },
+      userInfo () {
+        return this.$store.state.userInfo
       }
     },
     mounted () {
       this.refreshCategories()
     },
     methods: {
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
+      onClickLogout () {
+
+      },
       goCourseList (courseName) {
         this.$router.push(`/courseList?LIKE_name=${courseName}`)
         this.searchInput = ''

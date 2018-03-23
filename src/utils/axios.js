@@ -1,13 +1,14 @@
 import axios from 'axios'
 import router from './router'
+import store from './store'
 import vue from '../main'
 import * as Constant from './constant'
 
 axios.interceptors.request.use(
   request => {
-    let token = localStorage.getItem('token')
+    let token = store.state.token
     if (token) {
-      request.headers['CRS-TOKEN'] = `${token}`
+      request.headers['CRS-TOKEN'] = token
     }
     return request
   },
@@ -18,19 +19,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response) {
-      switch (response.status) {
+      switch (response.data.code) {
         case Constant.TOKEN_INVALID_CODE:
-          localStorage.removeItem('token')
-          localStorage.removeItem('password')
-          router.push({
-            path: 'login',
-            query: {
-              redirect: router.currentRoute.fullPath
-            }
-          })
+          let redirect = router.currentRoute.path === '/login' ? '/home' : router.currentRoute.fullPath
+          router.push({path: '/login', query: {redirect}})
           break
         case Constant.NO_PERMISSION_CODE:
-          vue.$message(response.data.message)
+          vue.$message.error(response.data.msg)
           break
       }
     }

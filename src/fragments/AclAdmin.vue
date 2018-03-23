@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
       <el-table-column prop='roleIds' label="授权角色" width="300">
-        <template slot-scope="scope">
+        <template v-if="!scope.row.anonymous" slot-scope="scope">
           {{ convertRoleIds2NamesString(scope.row.roleIds) }}
         </template>
       </el-table-column>

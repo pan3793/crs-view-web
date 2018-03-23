@@ -3,7 +3,10 @@ import qs from 'qs'
 
 export default {
   login (params) {
-    return axios.post('/crs-auth/api/login', params, {transformRequest: data => qs.stringify(data)})
+    return axios.post('/crs-server/api/auth/login', params, {transformRequest: data => qs.stringify(data)})
+  },
+  logout () {
+    return axios.post('/crs-server/api/auth/logout')
   },
   // user
   fetchUsers () {

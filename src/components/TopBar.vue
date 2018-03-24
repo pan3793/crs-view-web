@@ -52,8 +52,8 @@
                     :content="'欢迎 ' + userInfo.name + ' 使用'">
           <el-button type="text" size="medium">{{userInfo.name}}</el-button>
         </el-tooltip>
-        <el-button v-if="!isBlank(token)" type="danger" size="medium">后台管理</el-button>
-        <el-button v-if="isBlank(token)" type="primary" size="medium">登录</el-button>
+        <el-button v-if="!isBlank(token)" type="danger" size="medium" @click="onClickAdmin">后台管理</el-button>
+        <el-button v-if="isBlank(token)" type="primary" size="medium" @click="onClickLogin">登录</el-button>
         <el-button v-else type="warning" size="medium" @click="onClickLogout">注销</el-button>
       </el-col>
 
@@ -92,8 +92,27 @@
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
       },
+      onClickLogin () {
+        this.$router.push(`/login?redirect=${this.$router.currentRoute.fullPath}`)
+      },
+      onClickAdmin () {
+        this.$router.push('/admin')
+      },
       onClickLogout () {
-
+        this.logout()
+      },
+      logout () {
+        this.$api.logout().then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$store.commit('updateToken', null)
+              this.$store.commit('updateUserInfo', null)
+              this.$store.commit('updateAutoLogin', null)
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error(response.data.msg)
+          }
+        })
       },
       goCourseList (courseName) {
         this.$router.push(`/courseList?LIKE_name=${courseName}`)

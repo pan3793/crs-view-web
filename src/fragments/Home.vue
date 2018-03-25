@@ -4,7 +4,8 @@
       <el-carousel-item v-for="course in allRecommendedCourses" :key="course.id">
         <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%"
              @click="goCourse(course.id)">
-        <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
+        <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%"
+             @click="goCourse(course.id)">
       </el-carousel-item>
     </el-carousel>
 

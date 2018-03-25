@@ -102,7 +102,7 @@
         this.logout()
       },
       logout () {
-        this.$api.logout().then(response => {
+        this.$api.logout(this.token).then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.$store.commit('updateToken', null)

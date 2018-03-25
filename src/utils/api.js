@@ -5,8 +5,8 @@ export default {
   login (params) {
     return axios.post('/crs-server/api/auth/login', params, {transformRequest: data => qs.stringify(data)})
   },
-  logout () {
-    return axios.post('/crs-server/api/auth/logout')
+  logout (token) {
+    return axios.post('/crs-server/api/auth/logout', {token}, {transformRequest: data => qs.stringify(data)})
   },
   // user
   fetchUsers () {
@@ -56,22 +56,6 @@ export default {
   removeAclById (id) {
     return axios.delete(`/crs-auth-server/api/acl/${id}`)
   },
-  // teacher
-  fetchTeachers () {
-    return axios.get('/crs-server/api/teacher')
-  },
-  fetchTeacherById (id) {
-    return axios.get(`/crs-server/api/teacher/${id}`)
-  },
-  saveTeacher (entity) {
-    return axios.post('/crs-server/api/teacher', entity)
-  },
-  removeTeacherById (id) {
-    return axios.delete(`/crs-server/api/teacher/${id}`)
-  },
-  fetchUserIdNameList () {
-    return axios.get('/crs-server/api/teacher/userIdNameList')
-  },
   // category
   fetchCategories () {
     return axios.get('/crs-server/api/category')
@@ -91,6 +75,9 @@ export default {
   // course
   fetchCourses () {
     return axios.get('/crs-server/api/course/allWithCardName')
+  },
+  fetchCourseIdNameList () {
+    return axios.get('/crs-server/api/course/idNameList')
   },
   fetchRecommendedCourses () {
     return axios.get('/crs-server/api/course/recommended')
@@ -144,5 +131,24 @@ export default {
   },
   fetchFilesByIds (ids) {
     return axios.post(`/crs-file-server/api/file/queryByIds`, ids)
+  },
+  // question
+  queryQuestion (query) {
+    return axios.post('/crs-server/api/question/query', query)
+  },
+  fetchQuestionById (id) {
+    return axios.get(`/crs-server/api/question/${id}`)
+  },
+  saveQuestion (entity) {
+    return axios.post('/crs-server/api/question', entity)
+  },
+  removeQuestionById (id) {
+    return axios.delete(`/crs-server/api/question/${id}`)
+  },
+  fetchQuestionTypeList () {
+    return axios.get('/crs-server/api/question/typeList')
+  },
+  fetchQuestionCheckTypeList () {
+    return axios.get('/crs-server/api/question/checkTypeList')
   }
 }

@@ -42,8 +42,7 @@ export default new Router({
         },
         {
           path: 'courseList',
-          component: CourseList,
-          props: (route) => ({query: route.query})
+          component: CourseList
         },
         {
           path: 'exam',

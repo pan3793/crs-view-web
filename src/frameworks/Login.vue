@@ -66,7 +66,9 @@
               this.$store.commit('updateToken', response.data.data.token)
               this.$store.commit('updateUserInfo', response.data.data)
               this.$store.commit('updateLoginName', this.formData.loginName)
-              this.$store.commit('updatePassword', this.formData.password)
+              if (this.formMeta.remember) {
+                this.$store.commit('updatePassword', this.formData.password)
+              }
               this.$store.commit('updateRemember', this.formMeta.remember)
               this.$store.commit('updateAutoLogin', this.formMeta.autoLogin)
               this.goNext()

@@ -51,25 +51,22 @@
   import * as Constant from '../utils/constant'
 
   export default {
-    props: {
-      query: Object
-    },
     data () {
       return {
         categoryList: [],
         courses: [],
         formMeta: {},
         formData: {
-          EQ_categoryId: parseInt(this.query.EQ_categoryId) || null,
-          LIKE_name: this.query.LIKE_name || '',
-          EQ_teacherName: this.query.EQ_teacherName || '',
-          P_NUM: parseInt(this.query.P_NUM) || 0,
-          P_SIZE: parseInt(this.query.P_SIZE) || 10
+          EQ_categoryId: parseInt(this.$route.query.EQ_categoryId) || null,
+          LIKE_name: this.$route.query.LIKE_name || '',
+          EQ_teacherName: this.$route.query.EQ_teacherName || '',
+          P_NUM: parseInt(this.$route.query.P_NUM) || 0,
+          P_SIZE: parseInt(this.$route.query.P_SIZE) || 10
         },
         paginationMeta: {
           sizes: [4, 10, 20, 50],
-          currentNumber: parseInt(this.query.P_NUM) || 0,
-          size: parseInt(this.query.P_SIZE) || 10,
+          currentNumber: parseInt(this.$route.query.P_NUM) + 1 || 1,
+          size: parseInt(this.$route.query.P_SIZE) || 10,
           total: 0
         }
       }

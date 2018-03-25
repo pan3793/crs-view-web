@@ -1,12 +1,11 @@
 import axios from 'axios'
 import router from './router'
-import store from './store'
 import vue from '../main'
 import * as Constant from './constant'
 
 axios.interceptors.request.use(
   request => {
-    let token = store.state.token
+    let token = localStorage.token
     if (token) {
       request.headers['CRS-TOKEN'] = token
     }

@@ -18,8 +18,8 @@ export default new Vuex.Store({
     userInfo: func.parseJSON(localStorage.userInfo),
     loginName: localStorage.loginName,
     password: localStorage.password,
-    remember: localStorage.remember,
-    autoLogin: localStorage.autoLogin
+    remember: localStorage.remember === 'true',
+    autoLogin: localStorage.autoLogin === 'true'
   },
   mutations: {
     updateTopBarMenuCategories (state, categories) {
@@ -67,7 +67,7 @@ export default new Vuex.Store({
     },
     updateRemember (state, val) {
       state.remember = val
-      if (_.isEmpty(val)) {
+      if (val === null || val === undefined) {
         localStorage.removeItem('remember')
       } else {
         localStorage.remember = val
@@ -75,7 +75,7 @@ export default new Vuex.Store({
     },
     updateAutoLogin (state, val) {
       state.autoLogin = val
-      if (_.isEmpty(val)) {
+      if (val === null || val === undefined) {
         localStorage.removeItem('autoLogin')
       } else {
         localStorage.autoLogin = val

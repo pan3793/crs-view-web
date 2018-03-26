@@ -150,5 +150,11 @@ export default {
   },
   fetchQuestionCheckTypeList () {
     return axios.get('/crs-server/api/question/checkTypeList')
+  },
+  editQuestionAskAndAnswer (questionId, ask, answer) {
+    return axios.post(`/crs-server/api/question/${questionId}/editAskAndAnswer`, {ask, answer})
+  },
+  clearQuestionAskAndAnswer (questionId) {
+    return axios.post(`/crs-server/api/question/${questionId}/clearAskAndAnswer`)
   }
 }

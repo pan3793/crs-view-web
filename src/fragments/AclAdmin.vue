@@ -35,7 +35,8 @@
       </el-table-column>
       <el-table-column prop='affirmative' label="完全授权" width="80">
         <template slot-scope="scope">
-          <el-tag v-if="!scope.row.anonymous" size="small" :type="scope.row.affirmative === true ? 'success' : 'danger'" disable-transitions>
+          <el-tag v-if="!scope.row.anonymous" size="small" :type="scope.row.affirmative === true ? 'success' : 'danger'"
+                  disable-transitions>
             {{ scope.row.affirmative === true ? '启用' : '禁用' }}
           </el-tag>
         </template>
@@ -135,8 +136,8 @@
           url: '',
           anonymous: false,
           affirmative: false,
-          roleIds: '',
-          priority: null
+          roleIds: [],
+          priority: 0
         }
       }
     },
@@ -147,13 +148,22 @@
     methods: {
       onClickAdd () {
         this.formData.id = null
+        this.formData.name = ''
+        this.formData.url = ''
+        this.formData.anonymous = false
+        this.formData.affirmative = false
+        this.formData.roleIds = []
+        this.formData.priority = 0
+
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
         this.formMeta.visible = true
         // 避免首次加载对象不存在
-        if (this.$refs['form']) {
-          this.$refs['form'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['form']) {
+            this.$refs['form'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeRow (row) {
         this.formData.id = row.id

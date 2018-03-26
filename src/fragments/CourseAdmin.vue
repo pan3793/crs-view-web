@@ -349,13 +349,22 @@
         this.refreshTeacherIdNameList()
         this.refreshCategoryIdNameList()
         this.formData.id = null
+        this.formData.name = ''
+        this.formData.categoryId = null
+        this.formData.categoryName = ''
+        this.formData.teacherId = null
+        this.formData.teacherName = ''
+        this.formData.description = ''
+
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
         this.formMeta.visible = true
         // 避免首次加载对象不存在
-        if (this.$refs['form']) {
-          this.$refs['form'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['form']) {
+            this.$refs['form'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeRow (row) {
         this.formData.id = row.id
@@ -518,9 +527,11 @@
         this.cardFormMeta.showId = false
         this.cardFormMeta.showRemoveBtn = false
         this.cardFormMeta.visible = true
-        if (this.$refs['cardForm']) {
-          this.$refs['cardForm'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['cardForm']) {
+            this.$refs['cardForm'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeCard (courseId, cardId) {
         this.$api.fetchCardById(cardId).then(cardResponse => {

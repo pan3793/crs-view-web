@@ -59,6 +59,20 @@
                        :width="item.width"
                        :min-width="item.minWidth"></el-table-column>
 
+      <el-table-column label="题目/答案" width="150">
+        <template slot-scope="scope">
+          <el-button type="primary" size="small"
+                     @click="onClickAddAskAndAnswer(scope.row)"
+                     v-if="isBlank(scope.row.ask)">
+            新增<i class="el-icon-news el-icon--right"/>
+          </el-button>
+          <el-button type="success" size="small"
+                     @click="onClickEditAskAndAnswer(scope.row)"
+                     v-else>
+            编辑<i class="el-icon-document el-icon--right"/>
+          </el-button>
+        </template>
+      </el-table-column>
 
       <el-table-column v-for="item in tableMeta.columns_end"
                        :key="item.prop"
@@ -103,7 +117,6 @@
         <el-form-item prop="score" label="分值" :label-width="formMeta.labelWidth" required>
           <el-input-number v-model="formData.score" :min="0" :max="100"></el-input-number>
         </el-form-item>
-        <!--TODO ask answer-->
 
         <el-form-item prop="type" label="类型" :label-width="formMeta.labelWidth" required>
           <el-select v-model.trim="formData.type" style="width: 100%" filterable>
@@ -146,6 +159,20 @@
         <el-button type="primary" @click="onClickSubmit">确定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="题目/答案" :visible.sync="askAndAnswerFormMeta.visible">
+      <el-form :model="askAndAnswerFormData" :rules="askAndAnswerFormMeta.rules" ref="askAndAnswerForm"
+               @submit.native.prevent>
+        <!--TODO ask answer-->
+      </el-form>
+      <div slot="footer" style="text-align: end">
+        <el-button v-if="askAndAnswerFormMeta.showRemoveBtn" type="danger" @click="onClickClearAskAndAnswer"
+                   style="float: left">清除
+        </el-button>
+        <el-button @click="askAndAnswerFormMeta.visible = false">取消</el-button>
+        <el-button type="primary" @click="onClickSubmitAskAndAnswer">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -165,7 +192,7 @@
           columns_start: [
             {prop: 'id', label: 'Id', width: 60},
             {prop: 'courseName', label: '课程', width: 200},
-            {prop: 'score', label: '分值', minWidth: 100}
+            {prop: 'score', label: '分值', width: 100}
           ],
           columns_end: [
             {prop: 'type', label: '类型', width: 100},
@@ -215,6 +242,58 @@
           checkType: '',
           teacherId: null,
           teacherName: ''
+        },
+        askAndAnswerFormMeta: {
+          visible: false,
+          showRemoveBtn: true,
+          rules: {
+            ask: [
+              {required: true, message: '问题不能为空', trigger: 'blur'}
+            ],
+            answer: [
+              {required: true, message: '答案不能为空', trigger: 'blur'}
+            ]
+          },
+          toolbarConfig: {
+            bold: true, // 粗体
+            italic: true, // 斜体
+            header: true, // 标题
+            underline: true, // 下划线
+            strikethrough: true, // 中划线
+            mark: true, // 标记
+            superscript: true, // 上角标
+            subscript: true, // 下角标
+            quote: true, // 引用
+            ol: true, // 有序列表
+            ul: true, // 无序列表
+            link: true, // 链接
+            imagelink: true, // 图片链接
+            code: true, // code
+            table: true, // 表格
+            fullscreen: true, // 全屏编辑
+            readmodel: true, // 沉浸式阅读
+            htmlcode: false, // 展示html源码
+            help: true, // 帮助
+            /* 1.3.5 */
+            undo: true, // 上一步
+            redo: true, // 下一步
+            trash: true, // 清空
+            save: false, // 保存（触发events中的save事件）
+            /* 1.4.2 */
+            navigation: true, // 导航目录
+            /* 2.1.8 */
+            alignleft: true, // 左对齐
+            aligncenter: true, // 居中
+            alignright: true, // 右对齐
+            /* 2.2.1 */
+            subfield: true, // 单双栏模式
+            preview: true
+          }
+        },
+        askAndAnswerFormData: {
+          questionId: null,
+          ask: '',
+          answer: ''
         }
       }
     },
@@ -226,17 +305,31 @@
       this.refreshTeacherIdNameList()
     },
     methods: {
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
       onClickQuery () {
         this.refreshTable()
       },
       onClickAdd () {
         this.formData.id = null
+        this.formData.courseId = null
+        this.formData.courseName = ''
+        this.formData.score = 0
+        this.formData.ask = ''
+        this.formData.answer = ''
+        this.formData.type = ''
+        this.formData.checkType = ''
+        this.formData.teacherId = null
+        this.formData.teacherName = ''
         this.formMeta.showId = false
         this.formMeta.visible = true
         // 避免首次加载对象不存在
-        if (this.$refs['form']) {
-          this.$refs['form'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['form']) {
+            this.$refs['form'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeRow (row) {
         this.formData.id = row.id
@@ -306,6 +399,40 @@
       onPageSizeChange (pageSize) {
         this.queryFormData.P_SIZE = pageSize
         this.refreshTable()
+      },
+      onClickAddAskAndAnswer (row) {
+        this.askAndAnswerFormData.questionId = row.id
+        this.askAndAnswerFormData.ask = ''
+        this.askAndAnswerFormData.answer = ''
+
+        this.askAndAnswerFormMeta.showRemoveBtn = false
+        this.askAndAnswerFormMeta.visible = true
+        // 避免首次加载对象不存在
+        setTimeout(() => {
+          if (this.$refs['askAndAnswerForm']) {
+            this.$refs['askAndAnswerForm'].clearValidate()
+          }
+        }, 0)
+      },
+      onClickEditAskAndAnswer (row) {
+        this.askAndAnswerFormData.questionId = row.id
+        this.askAndAnswerFormData.ask = row.ask
+        this.askAndAnswerFormData.answer = row.answer
+
+        this.askAndAnswerFormMeta.showRemoveBtn = true
+        this.askAndAnswerFormMeta.visible = true
+        // 避免首次加载对象不存在
+        setTimeout(() => {
+          if (this.$refs['askAndAnswerForm']) {
+            this.$refs['askAndAnswerForm'].clearValidate()
+          }
+        }, 0)
+      },
+      onClickSubmitAskAndAnswer () {
+
+      },
+      onClickClearAskAndAnswer () {
+
       },
       refreshTable () {
         this.$api.queryQuestion(this.queryFormData).then(response => {

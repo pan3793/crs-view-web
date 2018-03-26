@@ -87,7 +87,8 @@
           <el-input type="password" v-model.trim="resetPasswordFormData.newPassword" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="newPasswordAgain" label="新密码确认" :label-width="resetPasswordFormMeta.labelWidth" required>
-          <el-input type="password" v-model.trim="resetPasswordFormData.newPasswordAgain" auto-complete="off"></el-input>
+          <el-input type="password" v-model.trim="resetPasswordFormData.newPasswordAgain"
+                    auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -183,15 +184,19 @@
     },
     methods: {
       onClickAdd () {
-        // 避免首次加载对象不存在
-        if (this.$refs['form']) {
-          this.$refs['form'].resetFields()
-        }
         this.formData.id = null
+        this.formData.name = ''
+        this.formData.loginName = ''
+        this.formData.roleIds = []
         this.formMeta.showId = false
         this.formMeta.nameDisabled = false
-        this.formMeta.roleIds = []
         this.formMeta.visible = true
+        // 避免首次加载对象不存在
+        setTimeout(() => {
+          if (this.$refs['form']) {
+            this.$refs['form'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeRow (row) {
         this.formData.id = row.id
@@ -224,9 +229,11 @@
         })
       },
       onClickResetPassword (row) {
-        if (this.$refs['resetPasswordForm']) {
-          this.$refs['resetPasswordForm'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['resetPasswordForm']) {
+            this.$refs['resetPasswordForm'].clearValidate()
+          }
+        }, 0)
         this.resetPasswordFormData.id = row.id
         this.resetPasswordFormData.name = row.name
         this.resetPasswordFormData.loginName = row.loginName

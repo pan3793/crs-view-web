@@ -92,12 +92,16 @@
     methods: {
       onClickAdd () {
         this.formData.id = null
+        this.formData.code = ''
+        this.formData.name = ''
         this.formMeta.showId = false
         this.formMeta.visible = true
         // 避免首次加载对象不存在
-        if (this.$refs['form']) {
-          this.$refs['form'].resetFields()
-        }
+        setTimeout(() => {
+          if (this.$refs['form']) {
+            this.$refs['form'].clearValidate()
+          }
+        }, 0)
       },
       onClickChangeRow (row) {
         this.formData.id = row.id

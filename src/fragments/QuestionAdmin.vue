@@ -160,10 +160,28 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="题目/答案" :visible.sync="askAndAnswerFormMeta.visible">
+    <el-dialog title="题目/答案" :visible.sync="askAndAnswerFormMeta.visible" width="1200px" top="10vh"
+               :close-on-click-modal="false">
       <el-form :model="askAndAnswerFormData" :rules="askAndAnswerFormMeta.rules" ref="askAndAnswerForm"
                @submit.native.prevent>
-        <!--TODO ask answer-->
+
+        <el-form-item label="题目" :label-width="askAndAnswerFormMeta.labelWidth">
+          <mavon-editor ref="askMd"
+                        default_open="preview"
+                        v-model="askAndAnswerFormData.ask"
+                        :toolbars="askAndAnswerFormMeta.toolbarConfig"
+                        @imgAdd="onClickAskMdAddImage">
+          </mavon-editor>
+        </el-form-item>
+
+        <el-form-item label="答案" :label-width="askAndAnswerFormMeta.labelWidth">
+          <mavon-editor ref="answerMd"
+                        default_open="preview"
+                        v-model="askAndAnswerFormData.answer"
+                        :toolbars="askAndAnswerFormMeta.toolbarConfig"
+                        @imgAdd="onClickAnswerMdAddImage">
+          </mavon-editor>
+        </el-form-item>
       </el-form>
       <div slot="footer" style="text-align: end">
         <el-button v-if="askAndAnswerFormMeta.showRemoveBtn" type="danger" @click="onClickClearAskAndAnswer"
@@ -246,6 +264,7 @@
         askAndAnswerFormMeta: {
           visible: false,
           showRemoveBtn: true,
+          labelWidth: '50px',
           rules: {
             ask: [
               {required: true, message: '问题不能为空', trigger: 'blur'}
@@ -400,6 +419,30 @@
         this.queryFormData.P_SIZE = pageSize
         this.refreshTable()
       },
+      onClickAskMdAddImage (pos, file) {
+        this.$api.uploadFile(file).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$refs['askMd'].$img2Url(pos, response.data.data.successes[0].url)
+              break
+            case Constant.FAILURE_CODE:
+              console.error(response.data)
+              this.$message.error('图片添加失败！')
+          }
+        })
+      },
+      onClickAnswerMdAddImage (pos, file) {
+        this.$api.uploadFile(file).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$refs['answerMd'].$img2Url(pos, response.data.data.successes[0].url)
+              break
+            case Constant.FAILURE_CODE:
+              console.error(response.data)
+              this.$message.error('图片添加失败！')
+          }
+        })
+      },
       onClickAddAskAndAnswer (row) {
         this.askAndAnswerFormData.questionId = row.id
         this.askAndAnswerFormData.ask = ''
@@ -421,18 +464,33 @@
 
         this.askAndAnswerFormMeta.showRemoveBtn = true
         this.askAndAnswerFormMeta.visible = true
-        // 避免首次加载对象不存在
-        setTimeout(() => {
-          if (this.$refs['askAndAnswerForm']) {
-            this.$refs['askAndAnswerForm'].clearValidate()
-          }
-        }, 0)
       },
       onClickSubmitAskAndAnswer () {
-
+        this.$api.editQuestionAskAndAnswer(this.askAndAnswerFormData.questionId,
+          this.askAndAnswerFormData.ask, this.askAndAnswerFormData.answer).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$message.success('保存成功！')
+              this.askAndAnswerFormMeta.visible = false
+              this.refreshTable()
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('保存失败！')
+          }
+        })
       },
       onClickClearAskAndAnswer () {
-
+        this.$api.clearQuestionAskAndAnswer(this.askAndAnswerFormData.questionId).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.$message.success('清除成功！')
+              this.askAndAnswerFormMeta.visible = false
+              this.refreshTable()
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('保存失败！')
+          }
+        })
       },
       refreshTable () {
         this.$api.queryQuestion(this.queryFormData).then(response => {

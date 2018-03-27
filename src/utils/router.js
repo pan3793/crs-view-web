@@ -17,7 +17,8 @@ import CourseAdmin from '@/fragments/CourseAdmin'
 import QuestionAdmin from '@/fragments/QuestionAdmin'
 import ClassworkAdmin from '@/fragments/ClassworkAdmin'
 import ExamAdmin from '@/fragments/ExamAdmin'
-import ForumAdmin from '@/fragments/ForumAdmin'
+import BlockAdmin from '@/fragments/BlockAdmin'
+import TopicAdmin from '@/fragments/TopicAdmin'
 
 Vue.use(Router)
 
@@ -95,8 +96,12 @@ export default new Router({
           component: ExamAdmin
         },
         {
-          path: 'forum',
-          component: ForumAdmin
+          path: 'forum/block',
+          component: BlockAdmin
+        },
+        {
+          path: 'forum/topic',
+          component: TopicAdmin
         }
       ]
     }

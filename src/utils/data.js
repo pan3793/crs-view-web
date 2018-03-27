@@ -63,7 +63,17 @@ export default {
     },
     {
       title: '论坛管理',
-      path: '/admin/forum'
+      path: '/admin/forum',
+      children: [
+        {
+          title: '版块管理',
+          path: '/admin/forum/block'
+        },
+        {
+          title: '帖子管理',
+          path: '/admin/forum/topic'
+        }
+      ]
     }
   ]
 }

@@ -156,5 +156,53 @@ export default {
   },
   clearQuestionAskAndAnswer (questionId) {
     return axios.post(`/crs-server/api/question/${questionId}/clearAskAndAnswer`)
+  },
+  // block
+  fetchBlocks () {
+    return axios.get('/crs-forum-server/api/blocks')
+  },
+  queryBlock (query) {
+    return axios.post('/crs-forum-server/api/block/query', query)
+  },
+  fetchBlockById (id) {
+    return axios.get(`/crs-forum-server/api/block/${id}`)
+  },
+  saveBlock (entity) {
+    return axios.post('/crs-forum-server/api/block', entity)
+  },
+  removeBlockById (id) {
+    return axios.delete(`/crs-forum-server/api/block/${id}`)
+  },
+  fetchBlockIdNameList () {
+    return axios.get('/crs-forum-server/api/block/idNameList')
+  },
+  // topic
+  fetchTopics () {
+    return axios.get('/crs-forum-server/api/topic')
+  },
+  queryTopic (query) {
+    return axios.post('/crs-server/api/topic/query', query)
+  },
+  fetchTopicById (id) {
+    return axios.get(`/crs-forum-server/api/topic/${id}`)
+  },
+  saveTopic (entity) {
+    return axios.post('/crs-forum-server/api/topic', entity)
+  },
+  removeTopicById (id) {
+    return axios.delete(`/crs-forum-server/api/topic/${id}`)
+  },
+  // discussion
+  fetchDiscussions () {
+    return axios.get('/crs-forum-server/api/discussion')
+  },
+  fetchDiscussionById (id) {
+    return axios.get(`/crs-forum-server/api/discussion/${id}`)
+  },
+  saveDiscussion (entity) {
+    return axios.post('/crs-forum-server/api/discussion', entity)
+  },
+  removeDiscussionById (id) {
+    return axios.delete(`/crs-forum-server/api/discussion/${id}`)
   }
 }

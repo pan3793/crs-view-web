@@ -12,7 +12,7 @@
           {{course.description}}
         </div>
 
-        <div style="padding-left: 20px">
+        <div v-if="!isBlank(course.imageUrl)" style="padding-left: 20px">
           <img :src="course.imageUrl" style=" max-width: 400px"/>
         </div>
 

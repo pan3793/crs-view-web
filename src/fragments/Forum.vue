@@ -9,7 +9,7 @@
           <el-input v-model="queryFormData.LIKE_keywords"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" icon="el-icon-search">搜索</el-button>
+          <el-button type="primary" @click="onClickSubmitQuery" icon="el-icon-search">搜索</el-button>
         </el-form-item>
       </el-form>
       <span><el-button type="success" @click="onClickAddTopic">发表新帖</el-button></span>
@@ -26,14 +26,23 @@
     </el-tabs>
 
     <div>
-      <el-card>
+      <el-card v-for="topic in topics" :key="topic.id">
         <div style="display: flex; justify-content: space-between">
           <div style="text-align: left">
-            <h2>我是标题</h2>
-            <div>版块 / 创建者 / 创建时间 / 最新回复 回复者 / 回复时间</div>
+            <h2>{{topic.name}}</h2>
+            <div>
+              <el-tag size="small">{{blockList.find((it) => it.id === topic.blockId).name}}</el-tag>
+              &nbsp;&nbsp; 创建者
+              <el-tag type="success" size="small">{{topic.creator}}</el-tag>
+              <el-tag type="warning" size="small">{{humanizeTime(topic.createTime)}}</el-tag>
+              <span>
+                &nbsp;&nbsp; 最新回复
+                <el-tag type="warning" size="small">{{humanizeTime(topic.modifiedTime)}}</el-tag>
+              </span>
+            </div>
           </div>
 
-          <el-badge :value="222" :max="99"/>
+          <el-badge :value="topic.discussionIds.split(',').filter(it => !isBlank(it)).length" :max="99"/>
 
         </div>
       </el-card>
@@ -55,11 +64,8 @@
     <el-dialog title="发帖" :visible.sync="topicFormMeta.visible" width="1200px" top="10vh" :close-on-click-modal="false">
 
       <el-form :model="topicFormData" :rules="topicFormMeta.rules" ref="topicForm" @submit.native.prevent>
-        <el-form-item prop="id" label="Id" :label-width="topicFormMeta.labelWidth" v-if="topicFormMeta.showId">
-          <el-input v-model.trim="topicFormData.id" auto-complete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="版块">
-          <el-select v-model="topicFormData.blockId" placeholder="请选择" :clearable="true">
+        <el-form-item label="版块" :label-width="topicFormMeta.labelWidth" required>
+          <el-select v-model="topicFormData.blockId" placeholder="请选择" :clearable="true" style="width: 100%" filterable>
             <el-option v-for="block in blockList"
                        :key="block.id"
                        :label="block.name"
@@ -92,16 +98,17 @@
 
 <script>
   import * as Constant from '../utils/constant'
-  // import moment from 'moment'
+  import moment from 'moment'
 
   export default {
     name: 'Forum',
     data () {
       return {
         blockList: [],
+        topics: [],
         queryFormMeta: {},
         queryFormData: {
-          EQ_BlockId: null,
+          EQ_blockId: null,
           LIKE_keywords: '',
           LIKE_name: '',
           EQ_creator: '',
@@ -169,12 +176,21 @@
         }
       }
     },
-    mounted () {
+    created () {
       this.refreshBlockIdNameList()
     },
+    mounted () {
+      this.refreshTopicList()
+    },
     methods: {
-      onSubmit () {
-
+      isBlank (str, chars = this._.whitespace) {
+        return this._.trim(str, chars).length === 0
+      },
+      humanizeTime (time) {
+        return moment(time).fromNow()
+      },
+      onClickSubmitQuery () {
+        this.refreshTopicList()
       },
       onClickAddTopic () {
         this.topicFormData.id = null
@@ -192,7 +208,7 @@
         }, 0)
       },
       onBlockTabClick (tab, event) {
-        this.queryFormData.EQ_BlockId = tab.name
+        this.queryFormData.EQ_blockId = tab.name
         this.refreshTopicList()
       },
       onPageNumChange (pageNum) {
@@ -216,7 +232,23 @@
         })
       },
       onClickSubmitTopic () {
-
+        this.$refs['topicForm'].validate((valid) => {
+          if (valid) {
+            this.$api.saveTopic(this.topicFormData).then(response => {
+              switch (response.data.code) {
+                case Constant.SUCCESS_CODE:
+                  this.$message.success('发帖成功！')
+                  this.topicFormMeta.visible = false
+                  this.refreshTopicList()
+                  break
+                case Constant.FAILURE_CODE:
+                  this.$message.error('发帖失败！')
+              }
+            })
+          } else {
+            return false
+          }
+        })
       },
       refreshBlockIdNameList () {
         this.$api.fetchBlockIdNameList().then(response => {
@@ -230,7 +262,16 @@
         })
       },
       refreshTopicList () {
-        console.log('refreshTopicList', this.queryFormData.EQ_BlockId)
+        this.$api.queryTopic(this.queryFormData).then(response => {
+          switch (response.data.code) {
+            case Constant.SUCCESS_CODE:
+              this.topics = response.data.data.content
+              this.paginationMeta.total = response.data.data.totalElements
+              break
+            case Constant.FAILURE_CODE:
+              this.$message.error('数据加载失败！')
+          }
+        })
       }
     }
   }

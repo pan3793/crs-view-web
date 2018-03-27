@@ -181,7 +181,7 @@ export default {
     return axios.get('/crs-forum-server/api/topic')
   },
   queryTopic (query) {
-    return axios.post('/crs-server/api/topic/query', query)
+    return axios.post('/crs-forum-server/api/topic/query', query)
   },
   fetchTopicById (id) {
     return axios.get(`/crs-forum-server/api/topic/${id}`)

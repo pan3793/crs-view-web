@@ -13,6 +13,7 @@ import store from './utils/store'
 import api from './utils/api'
 import _ from 'lodash'
 import preset from './utils/data'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 Vue.prototype.$api = api
@@ -21,6 +22,7 @@ Vue.prototype.preset = preset
 
 Vue.use(ElementUI)
 Vue.use(MavonEditor)
+moment.locale('zh_cn')
 
 /* eslint-disable no-new */
 export default new Vue({

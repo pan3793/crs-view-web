@@ -9,6 +9,7 @@ import CourseList from '@/fragments/CourseList'
 import Exam from '@/fragments/Exam'
 import Forum from '@/fragments/Forum'
 import Course from '@/fragments/Course'
+import Topic from '@/fragments/Topic'
 import UserAdmin from '@/fragments/UserAdmin'
 import RoleAdmin from '@/fragments/RoleAdmin'
 import AclAdmin from '@/fragments/AclAdmin'
@@ -56,6 +57,11 @@ export default new Router({
         {
           path: 'course/:id',
           component: Course
+        },
+        {
+          path: 'topic/:id',
+          name: 'topic',
+          component: Topic
         }
       ]
     },

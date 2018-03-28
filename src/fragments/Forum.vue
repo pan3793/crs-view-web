@@ -29,13 +29,15 @@
       <el-card v-for="topic in topics" :key="topic.id">
         <div style="display: flex; justify-content: space-between">
           <div style="text-align: left">
-            <h2>{{topic.name}}</h2>
+            <router-link :to="{name: 'topic', params: { id: topic.id }}">
+              <el-button type="text" style="font-size: 1.2em">{{topic.name}}</el-button>
+            </router-link>
             <div>
-              <el-tag size="small">{{blockList.find((it) => it.id === topic.blockId).name}}</el-tag>
+              <el-tag size="small">{{convertBlockId2Name(topic.blockId)}}</el-tag>
               &nbsp;&nbsp; 创建者
               <el-tag type="success" size="small">{{topic.creator}}</el-tag>
               <el-tag type="warning" size="small">{{humanizeTime(topic.createTime)}}</el-tag>
-              <span>
+              <span v-if="!isBlank(topic.discussionIds)">
                 &nbsp;&nbsp; 最新回复
                 <el-tag type="warning" size="small">{{humanizeTime(topic.modifiedTime)}}</el-tag>
               </span>
@@ -188,6 +190,10 @@
       },
       humanizeTime (time) {
         return moment(time).fromNow()
+      },
+      convertBlockId2Name (blockId) {
+        let block = this.blockList.find((it) => it.id === blockId)
+        return block ? block.name : ''
       },
       onClickSubmitQuery () {
         this.refreshTopicList()

@@ -33,18 +33,18 @@
               <el-button type="text" style="font-size: 1.2em">{{topic.name}}</el-button>
             </router-link>
             <div>
-              <el-tag size="small">{{convertBlockId2Name(topic.blockId)}}</el-tag>
+              <el-tag size="small">{{topic.blockName}}</el-tag>
               &nbsp;&nbsp; 创建者
               <el-tag type="success" size="small">{{topic.creator}}</el-tag>
               <el-tag type="warning" size="small">{{humanizeTime(topic.createTime)}}</el-tag>
-              <span v-if="!isBlank(topic.discussionIds)">
+              <span v-if="!isEmpty(topic.discussions)">
                 &nbsp;&nbsp; 最新回复
                 <el-tag type="warning" size="small">{{humanizeTime(topic.modifiedTime)}}</el-tag>
               </span>
             </div>
           </div>
 
-          <el-badge :value="topic.discussionIds.split(',').filter(it => !isBlank(it)).length" :max="99"/>
+          <el-badge :value="discussions.length" :max="99"/>
 
         </div>
       </el-card>
@@ -67,11 +67,12 @@
 
       <el-form :model="topicFormData" :rules="topicFormMeta.rules" ref="topicForm" @submit.native.prevent>
         <el-form-item label="版块" :label-width="topicFormMeta.labelWidth" required>
-          <el-select v-model="topicFormData.blockId" placeholder="请选择" :clearable="true" style="width: 100%" filterable>
+          <el-select v-model="topicFormData.blockName" placeholder="请选择" :clearable="true" style="width: 100%"
+                     filterable @change="onBlockNameSelectChange">
             <el-option v-for="block in blockList"
                        :key="block.id"
                        :label="block.name"
-                       :value="block.id"/>
+                       :value="block.name"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="keywords" label="关键字" :label-width="topicFormMeta.labelWidth" required>
@@ -172,6 +173,7 @@
         topicFormData: {
           id: null,
           blockId: null,
+          blockName: '',
           keywords: '',
           name: '',
           content: ''
@@ -188,12 +190,14 @@
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
       },
+      isEmpty (list) {
+        return (list == null || list === undefined || list.length === 0)
+      },
       humanizeTime (time) {
         return moment(time).fromNow()
       },
-      convertBlockId2Name (blockId) {
-        let block = this.blockList.find((it) => it.id === blockId)
-        return block ? block.name : ''
+      onBlockNameSelectChange (blockName) {
+        this.topicFormData.blockId = this.blockList.find((it) => it.name === blockName).id
       },
       onClickSubmitQuery () {
         this.refreshTopicList()
@@ -201,6 +205,7 @@
       onClickAddTopic () {
         this.topicFormData.id = null
         this.topicFormData.blockId = null
+        this.topicFormData.blockName = ''
         this.topicFormData.keywords = ''
         this.topicFormData.name = ''
         this.topicFormData.content = ''

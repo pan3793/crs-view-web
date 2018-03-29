@@ -4,11 +4,11 @@
       <div slot="header">
         <span>
           <h2>{{topic.name}}</h2>
-          <el-tag size="small">{{convertBlockId2Name(topic.blockId)}}</el-tag>
+          <el-tag size="small">{{topic.blockName}}</el-tag>
           &nbsp;&nbsp; 创建者
           <el-tag type="success" size="small">{{topic.creator}}</el-tag>
           <el-tag type="warning" size="small">{{humanizeTime(topic.createTime)}}</el-tag>
-          <span v-if="!isBlank(topic.discussionIds)">
+          <span v-if="!isEmpty(topic.discussions)">
                 &nbsp;&nbsp; 最新回复
                 <el-tag type="warning" size="small">{{humanizeTime(topic.modifiedTime)}}</el-tag>
               </span>
@@ -66,7 +66,7 @@
           labelWidth: '80px',
           rules: {
             content: [
-              {required: true, message: '标题不能为空', trigger: 'blur'}
+              {required: true, message: '回复内容不能为空', trigger: 'blur'}
             ]
           },
           toolbarConfig: {
@@ -117,18 +117,17 @@
       this.refreshBlockIdNameList()
     },
     mounted () {
-      this.refreshTopic()
+      this.refreshTopicDetail()
     },
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
       },
+      isEmpty (list) {
+        return (list == null || list === undefined || list.length === 0)
+      },
       humanizeTime (time) {
         return moment(time).fromNow()
-      },
-      convertBlockId2Name (blockId) {
-        let block = this.blockList.find((it) => it.id === blockId)
-        return block ? block.name : ''
       },
       onClickReply (replyId) {
         this.discussionFormData.id = null
@@ -157,7 +156,33 @@
         })
       },
       onClickSubmitDiscussion () {
-
+        this.$refs['discussionForm'].validate((valid) => {
+          if (valid) {
+            this.$api.saveDiscussion(this.discussionFormData).then(discussionResponse => {
+              switch (discussionResponse.data.code) {
+                case Constant.SUCCESS_CODE:
+                  this.$api.bindDiscussionById(this.$route.params.id, discussionResponse.data.data.id).then(topicResponse => {
+                    switch (topicResponse.data.code) {
+                      case Constant.SUCCESS_CODE:
+                        this.discussionFormMeta.visible = false
+                        this.$message.success('回复成功！')
+                        this.refreshTopicDetail()
+                        break
+                      case Constant.FAILURE_CODE:
+                        console.error(topicResponse.data)
+                        this.$message.error('主题绑定回复失败！')
+                    }
+                  })
+                  break
+                case Constant.FAILURE_CODE:
+                  console.error(discussionResponse.data)
+                  this.$message.error('回复失败！')
+              }
+            })
+          } else {
+            return false
+          }
+        })
       },
       refreshBlockIdNameList () {
         this.$api.fetchBlockIdNameList().then(response => {
@@ -170,11 +195,12 @@
           }
         })
       },
-      refreshTopic () {
+      refreshTopicDetail () {
         this.$api.fetchTopicById(this.$route.params.id).then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.topic = response.data.data
+              this.discussions = response.data.discussions
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

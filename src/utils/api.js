@@ -192,6 +192,9 @@ export default {
   removeTopicById (id) {
     return axios.delete(`/crs-forum-server/api/topic/${id}`)
   },
+  bindDiscussionById (id, discussionId) {
+    return axios.post(`/crs-forum-server/api/topic/${id}/bindDiscussion`, {discussionId}, {transformRequest: data => qs.stringify(data)})
+  },
   // discussion
   fetchDiscussions () {
     return axios.get('/crs-forum-server/api/discussion')

@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <el-badge :value="discussions.length" :max="99"/>
+          <el-badge :value="topic.discussions.length" :max="99"/>
 
         </div>
       </el-card>

@@ -159,7 +159,7 @@
         </el-form-item>
         <el-form-item label="内容" :label-width="cardFormMeta.labelWidth">
           <mavon-editor ref="md"
-                        default_open="preview"
+                        defaultOpen="preview"
                         v-model="cardFormData.content"
                         :toolbars="cardFormMeta.toolbarConfig"
                         @imgAdd="onClickMdAddImage">

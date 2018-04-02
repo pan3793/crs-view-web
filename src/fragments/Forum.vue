@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <el-badge :value="topic.discussions.length" :max="99"/>
+          <el-badge :value="calcDiscussionSize" :max="99"/>
 
         </div>
       </el-card>
@@ -83,7 +83,7 @@
         </el-form-item>
         <el-form-item label="内容" :label-width="topicFormMeta.labelWidth">
           <mavon-editor ref="md"
-                        default_open="preview"
+                        defaultOpen="preview"
                         v-model="topicFormData.content"
                         :toolbars="topicFormMeta.toolbarConfig"
                         @imgAdd="onClickMdAddImage">
@@ -195,6 +195,12 @@
       },
       humanizeTime (time) {
         return moment(time).fromNow()
+      },
+      calcDiscussionSize () {
+        if (this.topic.discussions instanceof Array) {
+          return this.topic.discussions.length
+        }
+        return 0
       },
       onBlockNameSelectChange (blockName) {
         this.topicFormData.blockId = this.blockList.find((it) => it.name === blockName).id

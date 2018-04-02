@@ -17,10 +17,10 @@
       </div>
       <mavon-editor v-if="true"
                     :value="topic.content"
-                    default_open="preview"
                     :subfield="false"
                     :editable="false"
                     :toolbarsFlag="false"
+                    defaultOpen="preview"
                     style="min-height: auto">
       </mavon-editor>
       <el-button type="primary" style="margin-top: 20px" @click="onClickReply(null)">回复</el-button>
@@ -34,7 +34,7 @@
       <el-form :model="discussionFormData" :rules="discussionFormMeta.rules" ref="discussionForm"
                @submit.native.prevent>
         <mavon-editor ref="md"
-                      default_open="preview"
+                      defaultOpen="preview"
                       v-model="discussionFormData.content"
                       :toolbars="discussionFormMeta.toolbarConfig"
                       @imgAdd="onClickMdAddImage">
@@ -62,7 +62,7 @@
         discussionIds: [],
         discussions: [],
         discussionFormMeta: {
-          visible: true,
+          visible: false,
           labelWidth: '80px',
           rules: {
             content: [

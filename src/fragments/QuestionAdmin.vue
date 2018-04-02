@@ -167,7 +167,7 @@
 
         <el-form-item label="题目" :label-width="askAndAnswerFormMeta.labelWidth">
           <mavon-editor ref="askMd"
-                        default_open="preview"
+                        defaultOpen="preview"
                         v-model="askAndAnswerFormData.ask"
                         :toolbars="askAndAnswerFormMeta.toolbarConfig"
                         @imgAdd="onClickAskMdAddImage">
@@ -176,7 +176,7 @@
 
         <el-form-item label="答案" :label-width="askAndAnswerFormMeta.labelWidth">
           <mavon-editor ref="answerMd"
-                        default_open="preview"
+                        defaultOpen="preview"
                         v-model="askAndAnswerFormData.answer"
                         :toolbars="askAndAnswerFormMeta.toolbarConfig"
                         @imgAdd="onClickAnswerMdAddImage">

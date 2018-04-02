@@ -33,7 +33,7 @@
 
             <mavon-editor v-if="!isBlank(card.content)"
                           :value="card.content"
-                          default_open="preview"
+                          defaultOpen="preview"
                           :subfield="false"
                           :editable="false"
                           :toolbarsFlag="false"

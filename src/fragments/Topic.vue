@@ -59,7 +59,6 @@
       return {
         blockList: [],
         topic: {},
-        discussionIds: [],
         discussions: [],
         discussionFormMeta: {
           visible: false,
@@ -196,11 +195,11 @@
         })
       },
       refreshTopicDetail () {
-        this.$api.fetchTopicById(this.$route.params.id).then(response => {
+        this.$api.fetchTopicDetailById(this.$route.params.id).then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.topic = response.data.data
-              this.discussions = response.data.discussions
+              this.discussions = response.data.data.discussions
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

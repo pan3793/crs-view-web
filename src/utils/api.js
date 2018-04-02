@@ -186,6 +186,9 @@ export default {
   fetchTopicById (id) {
     return axios.get(`/crs-forum-server/api/topic/${id}`)
   },
+  fetchTopicDetailById (id) {
+    return axios.get(`/crs-forum-server/api/topic/${id}/detail`)
+  },
   saveTopic (entity) {
     return axios.post('/crs-forum-server/api/topic', entity)
   },

@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <el-badge :value="calcDiscussionSize" :max="99"/>
+          <el-badge :value="calcDiscussionSize()" :max="99"/>
 
         </div>
       </el-card>
@@ -197,7 +197,7 @@
         return moment(time).fromNow()
       },
       calcDiscussionSize () {
-        if (this.topic.discussions instanceof Array) {
+        if (this.topic && this.topic.discussions instanceof Array) {
           return this.topic.discussions.length
         }
         return 0

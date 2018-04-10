@@ -13,9 +13,10 @@
                 <el-tag type="warning" size="small">{{humanizeTime(topic.modifiedTime)}}</el-tag>
               </span>
         </span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+        <el-button type="primary" size="small" style="float: right;" @click="onClickReply(null)">回帖
+        </el-button>
       </div>
-      <mavon-editor v-if="true"
+      <mavon-editor v-if="!isBlank(topic.content)"
                     :value="topic.content"
                     :subfield="false"
                     :editable="false"
@@ -23,11 +24,30 @@
                     defaultOpen="preview"
                     style="min-height: auto">
       </mavon-editor>
-      <el-button type="primary" style="margin-top: 20px" @click="onClickReply(null)">回复</el-button>
     </el-card>
 
-    <el-card v-for="discussion in discussions" :key="discussion.id">
-
+    <el-card v-for="(discussion, index) in discussions" :key="discussion.id">
+      <div style="margin-bottom: 10px; text-align: right">
+        <el-tag size="small" type="danger" v-if="discussion.replyId">
+          回复{{findDiscussionIndexById(discussion.replyId) + 1}}#
+        </el-tag>
+        <el-tag size="small" type="success">{{index + 1}}#</el-tag>
+      </div>
+      <mavon-editor v-if="!isBlank(discussion.content)"
+                    :value="discussion.content"
+                    :subfield="false"
+                    :editable="false"
+                    :toolbarsFlag="false"
+                    defaultOpen="preview"
+                    style="min-height: auto">
+      </mavon-editor>
+      <div style="margin-top: 10px">
+        创建者
+        <el-tag type="success" size="small">{{discussion.creator}}</el-tag>
+        <el-tag type="warning" size="small">{{humanizeTime(discussion.createTime)}}</el-tag>
+        <el-button type="primary" size="small" style="float: right" @click="onClickReply(discussion.id)">回复
+        </el-button>
+      </div>
     </el-card>
 
     <el-dialog title="发帖" :visible.sync="discussionFormMeta.visible" width="1200px" :close-on-click-modal="false">
@@ -127,6 +147,12 @@
       },
       humanizeTime (time) {
         return moment(time).fromNow()
+      },
+      findDiscussionIndexById (discussionId) {
+        let index = this.discussions.findIndex((value, index, arr) => {
+          return value.id === discussionId
+        })
+        return index !== -1 ? index : null
       },
       onClickReply (replyId) {
         this.discussionFormData.id = null

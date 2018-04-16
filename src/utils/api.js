@@ -15,6 +15,9 @@ export default {
   fetchUserById (id) {
     return axios.get(`/crs-auth-server/api/user/${id}`)
   },
+  queryUser (query) {
+    return axios.post('/crs-auth-server/api/user/query', query)
+  },
   saveUser (entity) {
     return axios.post('/crs-auth-server/api/user', entity)
   },
@@ -34,6 +37,9 @@ export default {
   fetchRoleById (id) {
     return axios.get(`/crs-auth-server/api/role/${id}`)
   },
+  queryRole (query) {
+    return axios.post('/crs-auth-server/api/role/query', query)
+  },
   saveRole (entity) {
     return axios.post('/crs-auth-server/api/role', entity)
   },
@@ -49,6 +55,9 @@ export default {
   },
   fetchAclById (id) {
     return axios.get(`/crs-auth-server/api/acl/${id}`)
+  },
+  queryAcl (query) {
+    return axios.post('/crs-auth-server/api/acl/query', query)
   },
   saveAcl (entity) {
     return axios.post('/crs-auth-server/api/acl', entity)

@@ -1,6 +1,26 @@
 <template>
   <div style="padding: 30px; text-align: start">
     <div>
+      <el-form :inline="true" :model="queryFormData" style="text-align: start">
+        <el-form-item label="名称">
+          <el-input v-model="queryFormData.LIKE_name"></el-input>
+        </el-form-item>
+        <el-form-item label="Url">
+          <el-input v-model="queryFormData.LIKE_url"></el-input>
+        </el-form-item>
+        <el-form-item label="匿名访问">
+          <el-select v-model="queryFormData.EQ_anonymous" placeholder="请选择" :clearable="true">
+            <el-option label="是" :value="true"></el-option>
+            <el-option label="否" :value="false"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onClickQuery" icon="el-icon-search">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div>
       <el-button type="primary" @click="onClickAdd">添加</el-button>
     </div>
 
@@ -54,6 +74,19 @@
                        :width="item.width"
                        :min-width="item.minWidth"></el-table-column>
     </el-table>
+
+    <div style="margin: 15px">
+      <el-pagination
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-sizes="paginationMeta.sizes"
+        :current-page="paginationMeta.currentNumber"
+        @current-change="onPageNumChange"
+        :page-size="paginationMeta.size"
+        @size-change="onPageSizeChange"
+        :total="paginationMeta.total">
+      </el-pagination>
+    </div>
 
     <el-dialog title="访问控制列表" :visible.sync="formMeta.visible">
       <el-form :model="formData" :rules="formMeta.rules" ref="form" @submit.native.prevent>
@@ -119,6 +152,21 @@
             {prop: 'modifiedTime', label: '修改时间', width: 160}
           ]
         },
+        queryFormMeta: {},
+        queryFormData: {
+          LIKE_name: '',
+          LIKE_url: '',
+          EQ_anonymous: null,
+          P_NUM: 0,
+          P_SIZE: 10,
+          O_priority_ASC: 1
+        },
+        paginationMeta: {
+          sizes: [5, 10, 20, 50],
+          currentNumber: 1,
+          size: 10,
+          total: 0
+        },
         tableData: [],
         formMeta: {
           visible: false,
@@ -148,6 +196,17 @@
     methods: {
       truncate (str, len) {
         return this._.truncate(str, {'length': len})
+      },
+      onClickQuery () {
+        this.refreshTable()
+      },
+      onPageNumChange (pageNum) {
+        this.queryFormData.P_NUM = pageNum - 1
+        this.refreshTable()
+      },
+      onPageSizeChange (pageSize) {
+        this.queryFormData.P_SIZE = pageSize
+        this.refreshTable()
       },
       onClickAdd () {
         this.formData.id = null
@@ -220,10 +279,11 @@
         })
       },
       refreshTable () {
-        this.$api.fetchAcls().then(response => {
+        this.$api.queryAcl(this.queryFormData).then(response => {
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
-              this.tableData = response.data.data
+              this.tableData = response.data.data.content
+              this.paginationMeta.total = response.data.data.totalElements
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

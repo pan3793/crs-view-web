@@ -61,6 +61,9 @@
       isEmpty (list) {
         return (list == null || list === undefined || list.length === 0)
       },
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
+      },
       goCourse (id) {
         this.$router.push(`/course/${id}`)
       },

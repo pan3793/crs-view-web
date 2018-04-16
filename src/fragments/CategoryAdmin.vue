@@ -88,6 +88,9 @@
       this.refreshTable()
     },
     methods: {
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
+      },
       onClickAdd () {
         this.formData.id = null
         this.formData.name = ''

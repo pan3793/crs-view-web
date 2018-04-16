@@ -33,7 +33,8 @@
             <el-button @click="onClickChangeCard(scope.row.id, card.id)"
                        type="success"
                        size="small"
-                       plain>
+                       plain
+                       style="margin: 0 10px 0 0">
               {{ card.name }}
             </el-button>
           </el-tooltip>
@@ -59,6 +60,17 @@
                      v-else>
             上传<i class="el-icon-upload el-icon--right"/>
           </el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="description" label="描述" min-width="300">
+        <template slot-scope="scope">
+          <el-tooltip>
+            <div slot="content" style="max-width: 500px">
+              {{scope.row.description}}
+            </div>
+            <span>{{truncate(scope.row.description, 40)}}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
 
@@ -211,7 +223,6 @@
             {prop: 'teacherName', label: '教师', width: 100}
           ],
           columns_end: [
-            {prop: 'description', label: '描述', minWidth: 300},
             {prop: 'creator', label: '创建人', width: 100},
             {prop: 'createTime', label: '创建时间', width: 160},
             {prop: 'modifier', label: '修改人', width: 100},
@@ -326,6 +337,9 @@
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
+      },
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
       },
       extractFileIds: function (fileList) {
         return this._.flatMap(fileList

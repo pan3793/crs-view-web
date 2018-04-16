@@ -129,6 +129,9 @@
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
       },
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
+      },
       onClickQuery () {
         this.refreshTable()
       },

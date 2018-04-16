@@ -13,7 +13,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "compression-webpack-plugin": "^1.1.11",
-    "element-ui": "^2.2.3",
+    "element-ui": "^2.3.4",
     "lodash": "^4.17.5",
     "mavon-editor": "^2.4.16",
     "moment": "^2.21.0",

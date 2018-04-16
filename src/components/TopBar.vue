@@ -49,10 +49,11 @@
 
       <el-col :span="6">
         <el-tooltip v-if="!isBlank(token)" class="item" effect="dark" placement="bottom"
-                    :content="'欢迎 ' + userInfo.name + ' 使用'">
+                    :content="'欢迎 ' + userInfo.name + ' 使用！'">
           <el-button type="text" size="medium">{{userInfo.name}}</el-button>
         </el-tooltip>
-        <el-button v-if="!isBlank(token)" type="danger" size="medium" @click="onClickAdmin">后台管理</el-button>
+        <el-button v-if="isAdminBtnValid()" type="danger" size="medium" @click="onClickAdmin">后台管理
+        </el-button>
         <el-button v-if="isBlank(token)" type="primary" size="medium" @click="onClickLogin">登录</el-button>
         <el-button v-else type="warning" size="medium" @click="onClickLogout">注销</el-button>
       </el-col>
@@ -91,6 +92,10 @@
     methods: {
       isBlank (str, chars = this._.whitespace) {
         return this._.trim(str, chars).length === 0
+      },
+      isAdminBtnValid () {
+        return (!this.isBlank(this.token)) && this.userInfo && this._.isArray(this.userInfo.roles) &&
+          (this.userInfo.roles.includes('教师') || this.userInfo.roles.includes('管理员'))
       },
       onClickLogin () {
         this.$router.push(`/login?redirect=${this.$router.currentRoute.fullPath}`)

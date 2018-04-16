@@ -193,6 +193,9 @@
       isEmpty (list) {
         return (list == null || list === undefined || list.length === 0)
       },
+      truncate (str, len) {
+        return this._.truncate(str, {'length': len})
+      },
       humanizeTime (time) {
         return moment(time).fromNow()
       },

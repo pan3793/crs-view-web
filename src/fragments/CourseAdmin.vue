@@ -25,7 +25,7 @@
                        :label="item.label"
                        :width="item.width"
                        :min-width="item.minWidth"></el-table-column>
-      <el-table-column prop="cardIds" label="卡片" width="300">
+      <el-table-column prop="cardIds" label="卡片" width="400">
         <template slot-scope="scope">
           <el-tooltip content="编辑卡片"
                       v-for="card in scope.row.cards"
@@ -34,14 +34,15 @@
                        type="success"
                        size="small"
                        plain
-                       style="margin: 0 10px 0 0">
+                       style="margin: 4px 10px 4px 0">
               {{ card.name }}
             </el-button>
           </el-tooltip>
           <el-tooltip content="新增卡片">
             <el-button @click="onClickAddCard(scope.row.id)"
                        type="text"
-                       icon="el-icon-plus">
+                       icon="el-icon-plus"
+                       style="margin: 0 10px 0 0">
             </el-button>
           </el-tooltip>
         </template>

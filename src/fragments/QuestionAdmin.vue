@@ -233,7 +233,7 @@
           P_SIZE: 10
         },
         paginationMeta: {
-          sizes: [3, 10, 20, 50],
+          sizes: [5, 10, 20, 50],
           currentNumber: 1,
           size: 10,
           total: 0

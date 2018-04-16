@@ -64,7 +64,7 @@
           P_SIZE: parseInt(this.$route.query.P_SIZE) || 10
         },
         paginationMeta: {
-          sizes: [4, 10, 20, 50],
+          sizes: [5, 10, 20, 50],
           currentNumber: parseInt(this.$route.query.P_NUM) + 1 || 1,
           size: parseInt(this.$route.query.P_SIZE) || 10,
           total: 0

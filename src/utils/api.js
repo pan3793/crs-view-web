@@ -66,6 +66,9 @@ export default {
   fetchCategoryById (id) {
     return axios.get(`/crs-server/api/category/${id}`)
   },
+  queryCategory (query) {
+    return axios.post('/crs-server/api/category/query', query)
+  },
   saveCategory (entity) {
     return axios.post('/crs-server/api/category', entity)
   },
@@ -73,8 +76,11 @@ export default {
     return axios.delete(`/crs-server/api/category/${id}`)
   },
   // course
-  fetchCourses () {
+  fetchCoursesWithCardName () {
     return axios.get('/crs-server/api/course/allWithCardName')
+  },
+  queryCourseWithCardName (query) {
+    return axios.post('/crs-server/api/course/queryWithCardName', query)
   },
   fetchCourseIdNameList () {
     return axios.get('/crs-server/api/course/idNameList')

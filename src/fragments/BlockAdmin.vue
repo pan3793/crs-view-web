@@ -92,7 +92,6 @@
             {prop: 'modifiedTime', label: '修改时间', width: 160}
           ]
         },
-        tableData: [],
         queryFormMeta: {},
         queryFormData: {
           LIKE_name: '',
@@ -100,11 +99,12 @@
           P_SIZE: 10
         },
         paginationMeta: {
-          sizes: [3, 10, 20, 50],
+          sizes: [5, 10, 20, 50],
           currentNumber: 1,
           size: 10,
           total: 0
         },
+        tableData: [],
         formMeta: {
           visible: false,
           showId: false,

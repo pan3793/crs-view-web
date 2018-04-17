@@ -1,11 +1,10 @@
 <template>
   <div>
     <el-carousel :interval="4000" type="card" height="360px">
-      <el-carousel-item v-for="course in allRecommendedCourses" :key="course.id">
-        <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%"
-             @click="goCourse(course.id)">
-        <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%"
-             @click="goCourse(course.id)">
+      <el-carousel-item v-for="course in allRecommendedCourses"
+                        :key="course.id"
+                        :style="background(course.imageUrl)">
+        <div @click="goCourse(course.id)" style="width: 100%; height: 100%"></div>
       </el-carousel-item>
     </el-carousel>
 
@@ -22,10 +21,7 @@
           <el-row>
             <el-col :span="12" v-for="course in categoryWithCourse.courses" :key="course.id" style="padding: 15px">
               <el-card :body-style="{ padding: '0px' }">
-                <div style="width: 247px; height: 208px">
-                  <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
-                  <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
-                </div>
+                <div :style="background(course.imageUrl)" style="width: 247px; height: 208px;"></div>
                 <div>
                   <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>
                 </div>
@@ -64,6 +60,15 @@
       truncate (str, len) {
         return this._.truncate(str, {'length': len})
       },
+      background (imageUrl) {
+        let imgUrl = this.isBlank(imageUrl) ? require('../assets/logo.png') : imageUrl
+        return {
+          backgroundImage: `url(${imgUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }
+      },
       goCourse (id) {
         this.$router.push(`/course/${id}`)
       },
@@ -84,11 +89,4 @@
 </script>
 
 <style>
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }
 </style>

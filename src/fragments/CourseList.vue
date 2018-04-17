@@ -23,10 +23,7 @@
     <el-row>
       <el-col :span="6" v-for="course in courses" :key="course.id" style="padding: 15px">
         <el-card :body-style="{ padding: '0px' }">
-          <div style="width: 278px; height: 208px">
-            <img v-if="!isBlank(course.imageUrl)" :src="course.imageUrl" style="min-width: 100%; height: 100%">
-            <img v-else src="../assets/logo.png" style="min-width: 100%; height: 100%">
-          </div>
+          <div :style="background(course.imageUrl)" style="width: 278px; height: 208px"></div>
           <div>
             <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>
           </div>
@@ -100,6 +97,15 @@
       },
       truncate (str, len) {
         return this._.truncate(str, {'length': len})
+      },
+      background (imageUrl) {
+        let imgUrl = this.isBlank(imageUrl) ? require('../assets/logo.png') : imageUrl
+        return {
+          backgroundImage: `url(${imgUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }
       },
       onSubmit () {
         this.refreshCourses()

@@ -4,7 +4,6 @@ import Framework from '@/frameworks/Framework'
 import AdminFramework from '@/frameworks/AdminFramework'
 import Login from '@/frameworks/Login'
 import Home from '@/fragments/Home'
-import Classwork from '@/fragments/Classwork'
 import CourseList from '@/fragments/CourseList'
 import Exam from '@/fragments/Exam'
 import Forum from '@/fragments/Forum'
@@ -16,7 +15,6 @@ import AclAdmin from '@/fragments/AclAdmin'
 import CategoryAdmin from '@/fragments/CategoryAdmin'
 import CourseAdmin from '@/fragments/CourseAdmin'
 import QuestionAdmin from '@/fragments/QuestionAdmin'
-import ClassworkAdmin from '@/fragments/ClassworkAdmin'
 import ExamAdmin from '@/fragments/ExamAdmin'
 import BlockAdmin from '@/fragments/BlockAdmin'
 import TopicAdmin from '@/fragments/TopicAdmin'
@@ -37,10 +35,6 @@ export default new Router({
         {
           path: 'home',
           component: Home
-        },
-        {
-          path: 'classwork',
-          component: Classwork
         },
         {
           path: 'courseList',
@@ -92,10 +86,6 @@ export default new Router({
         {
           path: 'course',
           component: CourseAdmin
-        },
-        {
-          path: 'classwork',
-          component: ClassworkAdmin
         },
         {
           path: 'exam',

@@ -18,15 +18,6 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="批阅类型">
-          <el-select v-model="queryFormData.EQ_checkType" placeholder="请选择" :clearable="true" style="width: 100px">
-            <el-option v-for="checkType in checkTypeList"
-                       :key="checkType.code"
-                       :label="checkType.name"
-                       :value="checkType.name"/>
-          </el-select>
-        </el-form-item>
-
         <el-form-item>
           <el-button type="primary" @click="onClickQuery" icon="el-icon-search">查询</el-button>
         </el-form-item>
@@ -114,7 +105,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="score" label="分值" :label-width="formMeta.labelWidth" required>
+        <el-form-item prop="score" label="难度" :label-width="formMeta.labelWidth" required>
           <el-input-number v-model="formData.score" :min="0" :max="100"></el-input-number>
         </el-form-item>
 
@@ -122,16 +113,6 @@
           <el-select v-model.trim="formData.type" style="width: 100%" filterable>
             <el-option
               v-for="item in typeList"
-              :key="item.code"
-              :label="item.name"
-              :value="item.name">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="checkType" label="批阅类型" :label-width="formMeta.labelWidth" required>
-          <el-select v-model.trim="formData.checkType" style="width: 100%" filterable>
-            <el-option
-              v-for="item in checkTypeList"
               :key="item.code"
               :label="item.name"
               :value="item.name">
@@ -202,7 +183,6 @@
     data () {
       return {
         typeList: [],
-        checkTypeList: [],
         courseList: [],
         teacherList: [],
         tableMeta: {
@@ -210,11 +190,10 @@
           columns_start: [
             {prop: 'id', label: 'Id', width: 60},
             {prop: 'courseName', label: '课程', width: 200},
-            {prop: 'score', label: '分值', width: 100}
+            {prop: 'score', label: '难度', width: 100}
           ],
           columns_end: [
             {prop: 'type', label: '类型', width: 100},
-            {prop: 'checkType', label: '批阅类型', width: 100},
             {prop: 'teacherName', label: '教师', width: 100},
             {prop: 'creator', label: '创建人', width: 100},
             {prop: 'createTime', label: '创建时间', width: 160},
@@ -228,7 +207,6 @@
           LIKE_courseName: '',
           LIKE_teacherName: '',
           EQ_type: '',
-          EQ_checkType: '',
           P_NUM: 0,
           P_SIZE: 10
         },
@@ -257,7 +235,6 @@
           ask: '',
           answer: '',
           type: '',
-          checkType: '',
           teacherId: null,
           teacherName: ''
         },
@@ -319,7 +296,6 @@
     mounted () {
       this.refreshTable()
       this.refreshTypeCodeNameList()
-      this.refreshCheckTypeCodeNameList()
       this.refreshCourseIdNameList()
       this.refreshTeacherIdNameList()
     },
@@ -341,7 +317,6 @@
         this.formData.ask = ''
         this.formData.answer = ''
         this.formData.type = ''
-        this.formData.checkType = ''
         this.formData.teacherId = null
         this.formData.teacherName = ''
         this.formMeta.showId = false
@@ -361,7 +336,6 @@
         this.formData.ask = row.ask
         this.formData.answer = row.answer
         this.formData.type = row.type
-        this.formData.checkType = row.checkType
         this.formData.teacherId = row.teacherId
         this.formData.teacherName = row.teacherName
 
@@ -512,17 +486,6 @@
           switch (response.data.code) {
             case Constant.SUCCESS_CODE:
               this.typeList = response.data.data
-              break
-            case Constant.FAILURE_CODE:
-              this.$message.error('数据加载失败！')
-          }
-        })
-      },
-      refreshCheckTypeCodeNameList () {
-        this.$api.fetchQuestionCheckTypeList().then(response => {
-          switch (response.data.code) {
-            case Constant.SUCCESS_CODE:
-              this.checkTypeList = response.data.data
               break
             case Constant.FAILURE_CODE:
               this.$message.error('数据加载失败！')

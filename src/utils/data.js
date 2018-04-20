@@ -10,11 +10,7 @@ export default {
       children: []
     },
     {
-      title: '作业',
-      path: '/classwork'
-    },
-    {
-      title: '在线考试',
+      title: '在线测试',
       path: '/exam'
     },
     {
@@ -52,10 +48,6 @@ export default {
     {
       title: '题库管理',
       path: '/admin/question'
-    },
-    {
-      title: '作业管理',
-      path: '/admin/classwork'
     },
     {
       title: '考试管理',

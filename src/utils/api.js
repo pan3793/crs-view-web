@@ -163,11 +163,33 @@ export default {
   fetchQuestionTypeList () {
     return axios.get('/crs-server/api/question/typeList')
   },
+  fetchQuestionsByCourseId (courseId) {
+    return axios.get('/crs-server/api/question/byCourseId', {params: {courseId}})
+  },
   editQuestionAskAndAnswer (questionId, ask, answer) {
     return axios.post(`/crs-server/api/question/${questionId}/editAskAndAnswer`, {ask, answer})
   },
   clearQuestionAskAndAnswer (questionId) {
     return axios.post(`/crs-server/api/question/${questionId}/clearAskAndAnswer`)
+  },
+  // exam
+  queryExam (query) {
+    return axios.post('/crs-server/api/exam/query', query)
+  },
+  fetchExamById (id) {
+    return axios.get(`/crs-server/api/exam/${id}`)
+  },
+  fetchExamDetailById (id) {
+    return axios.get(`/crs-server/api/exam/${id}/detail`)
+  },
+  saveExam (entity) {
+    return axios.post('/crs-server/api/exam', entity)
+  },
+  editExamQuestionIds (id, questionIds) {
+    return axios.post(`/crs-server/api/exam/${id}/editQuestions`, questionIds)
+  },
+  removeExamById (id) {
+    return axios.delete(`/crs-server/api/exam/${id}`)
   },
   // block
   fetchBlocks () {

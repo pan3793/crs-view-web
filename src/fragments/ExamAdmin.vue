@@ -53,6 +53,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="description" label="描述" min-width="300">
+        <template slot-scope="scope">
+          <el-tooltip>
+            <div slot="content" style="max-width: 500px">
+              {{scope.row.description}}
+            </div>
+            <span>{{truncate(scope.row.description, 40)}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
       <el-table-column v-for="item in tableMeta.columns_end"
                        :key="item.prop"
                        :prop="item.prop"
@@ -126,8 +137,13 @@
         <el-collapse-item
           v-for="question in previewQuestionsDialogMeta.questions"
           :key="question.id"
-          :title="truncate(question.ask, 30)"
           :name="question.id">
+          <template slot="title">
+            <div style="width: 95%; display: flex; justify-content: space-between">
+              <span>{{ truncate(question.ask, 30) }}</span>
+              <span><el-tag type="success" size="small">{{question.type}}</el-tag></span>
+            </div>
+          </template>
           <span>问题</span>
           <mavon-editor :value="question.ask"
                         defaultOpen="preview"
@@ -291,7 +307,7 @@
       onClickChangeRow (row) {
         this.formData.id = row.id
         this.formData.name = row.name
-        this.description = row.description
+        this.formData.description = row.description
         this.formData.courseId = row.courseId
         this.formData.courseName = row.courseName
         this.formData.teacherId = row.teacherId

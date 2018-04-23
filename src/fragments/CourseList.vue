@@ -16,13 +16,13 @@
         <el-input v-model="formData.EQ_teacherName"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit" icon="el-icon-search">搜索</el-button>
+        <el-button type="primary" @click="onClickQuery" icon="el-icon-search">搜索</el-button>
       </el-form-item>
     </el-form>
 
     <el-row>
       <el-col :span="6" v-for="course in courses" :key="course.id" style="padding: 15px">
-        <el-card :body-style="{ padding: '0px' }">
+        <el-card :body-style="{ padding: '0px' }" shadow="hover">
           <div :style="background(course.imageUrl)" style="width: 278px; height: 208px"></div>
           <div>
             <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>
@@ -107,7 +107,7 @@
           backgroundRepeat: 'no-repeat'
         }
       },
-      onSubmit () {
+      onClickQuery () {
         this.refreshCourses()
       },
       goCourse (id) {

@@ -11,7 +11,7 @@ export default {
     },
     {
       title: '在线测试',
-      path: '/exam'
+      path: '/examList'
     },
     {
       title: '交流论坛',

@@ -6,6 +6,7 @@ import Login from '@/frameworks/Login'
 import Home from '@/fragments/Home'
 import CourseList from '@/fragments/CourseList'
 import Exam from '@/fragments/Exam'
+import ExamList from '@/fragments/ExamList'
 import Forum from '@/fragments/Forum'
 import Course from '@/fragments/Course'
 import Topic from '@/fragments/Topic'
@@ -41,8 +42,8 @@ export default new Router({
           component: CourseList
         },
         {
-          path: 'exam',
-          component: Exam
+          path: 'examList',
+          component: ExamList
         },
         {
           path: 'forum',
@@ -51,6 +52,10 @@ export default new Router({
         {
           path: 'course/:id',
           component: Course
+        },
+        {
+          path: 'exam/:id',
+          component: Exam
         },
         {
           path: 'topic/:id',

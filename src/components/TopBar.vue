@@ -42,7 +42,7 @@
       </el-col>
 
       <el-col :span="5" :style="{visibility: searchBarVisible ? 'visible': 'hidden'}">
-        <el-input v-model="searchInput" placeholder="请输入内容">
+        <el-input v-model="searchInput" placeholder="请输入检索课程名称">
           <el-button slot="append" type="primary" icon="el-icon-search" @click="goCourseList(searchInput)"/>
         </el-input>
       </el-col>

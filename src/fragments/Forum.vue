@@ -26,7 +26,7 @@
     </el-tabs>
 
     <div>
-      <el-card v-for="topic in topics" :key="topic.id">
+      <el-card v-for="topic in topics" :key="topic.id" shadow="hover">
         <div style="display: flex; justify-content: space-between">
           <div style="text-align: left">
             <router-link :to="{name: 'topic', params: { id: topic.id }}">

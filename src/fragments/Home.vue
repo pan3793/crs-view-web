@@ -20,7 +20,7 @@
 
           <el-row>
             <el-col :span="12" v-for="course in categoryWithCourse.courses" :key="course.id" style="padding: 15px">
-              <el-card :body-style="{ padding: '0px' }">
+              <el-card :body-style="{ padding: '0px' }" shadow="hover">
                 <div :style="background(course.imageUrl)" style="width: 247px; height: 208px;"></div>
                 <div>
                   <el-button type="text" @click="goCourse(course.id)">{{course.name}}</el-button>

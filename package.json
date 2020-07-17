@@ -14,7 +14,7 @@
     "axios": "^0.17.1",
     "compression-webpack-plugin": "^1.1.11",
     "element-ui": "^2.3.6",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "mavon-editor": "^2.4.16",
     "moment": "^2.21.0",
     "qs": "^6.5.1",
